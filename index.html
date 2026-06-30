@@ -98,7 +98,7 @@ a{color:inherit;text-decoration:none}
 @media(min-width:860px){.nav-links a.lnk{display:inline}}
 
 /* ====================== 深度ゲージ（固定）====================== */
-.gauge{position:fixed;right:clamp(14px,3vw,38px);top:50%;transform:translateY(-50%);z-index:40;
+.gauge{position:fixed;right:clamp(14px,3vw,38px);top:50%;transform:translateY(-50%);z-index:45;
   display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;
   font-family:"IBM Plex Mono",monospace;color:var(--ink);transition:color .5s linear,opacity .4s}
 .nav.deep ~ .gauge,.gauge.deep{color:var(--foam)}
@@ -106,7 +106,7 @@ a{color:inherit;text-decoration:none}
 .gauge.deep .track{background:linear-gradient(rgba(233,246,253,.5),rgba(233,246,253,.05))}
 .gauge .tick{position:absolute;left:50%;transform:translateX(-50%);width:9px;height:1px;background:currentColor;opacity:.5}
 /* 潜水艦（深度ゲージのレールを降りていく） */
-.sub{position:absolute;left:50%;top:0;width:80px;transform:translateX(-84%);
+.sub{position:absolute;left:50%;top:0;width:80px;transform:translateX(calc(-100% - 8px));
   transition:top .12s linear;pointer-events:none;will-change:top;filter:drop-shadow(-4px 6px 9px rgba(0,12,20,.42));
   /* 光の色：浅い=シアン → 深い=黄色（暗くなるほど黄色く点灯） */
   --lightcol:color-mix(in srgb, #7fe6ff, #ffce3a calc(var(--lit,0) * 100%))}
@@ -133,6 +133,7 @@ a{color:inherit;text-decoration:none}
 }
 
 /* =========================== LAYOUT =========================== */
+main{isolation:isolate} /* 本文を1つの重ね合わせ文脈に閉じ込め、深度ゲージ(潜水艦)を常に前面に */
 section{position:relative;z-index:1;padding-inline:clamp(20px,6vw,40px)}
 .wrap{max-width:var(--maxw);margin-inline:auto;width:100%}
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;
