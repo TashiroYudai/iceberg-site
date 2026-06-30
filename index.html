@@ -146,9 +146,18 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 
 /* ============================ HERO ============================ */
 .hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink)}
-.hero .grid{display:grid;gap:clamp(28px,5vw,56px);grid-template-columns:1fr;align-items:center}
-.hero .grid>*{min-width:0}
-@media(min-width:940px){.hero .grid{grid-template-columns:1.05fr .95fr}}
+.hero .grid{display:flex;flex-direction:column;gap:clamp(16px,4vw,26px)}
+.hero-copy{display:contents}
+.hero-head{order:1}.berg{order:2}.hero-body{order:3}
+.hero .grid>*,.hero-head,.hero-body{min-width:0}
+@media(min-width:940px){
+  .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;column-gap:clamp(28px,5vw,56px);align-items:center}
+  .hero-copy{display:block}
+}
+@media(max-width:939px){
+  .hero{align-items:start;padding-top:66px;padding-bottom:30px}
+  .berg svg{height:47svh;width:auto;max-width:100%;margin-inline:auto}
+}
 .hero h1{font-size:clamp(2.4rem,6vw,4.5rem);color:var(--ink)}
 .hero h1 .em{position:relative;white-space:nowrap}
 .hero h1 .em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.14em;
@@ -374,9 +383,12 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   <!-- ===================== HERO / 0m 水面 ===================== -->
   <section class="hero" id="surface">
     <div class="wrap grid">
-      <div>
+      <div class="hero-copy">
+      <div class="hero-head">
         <span class="eyebrow">00m · 水面</span>
         <h1 style="margin-top:18px">その課題は、<br><span class="em">氷山の一角。</span></h1>
+      </div>
+      <div class="hero-body">
         <p class="lead">「アプリが欲しい」「サイトを直したい」——そのご相談の多くは、もっと深いところにある本当の課題の入り口です。まず潜って課題の全体をつかみ、最適な手段で解決します。</p>
         <div class="chips" aria-label="解決の手段">
           <span class="chip">📱 スマホアプリ</span>
@@ -386,6 +398,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
         <a class="scrollcue" href="#cross">
           <span class="dive" aria-hidden="true"></span> 水面下へ潜る
         </a>
+      </div>
       </div>
 
       <!-- 氷山の断面図（10% / 90%）— 結晶質ファセット・水中発光・水面反射・浮遊 -->

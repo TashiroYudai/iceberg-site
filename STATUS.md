@@ -42,3 +42,9 @@
 
 ## プレビュー
 ブラウザで `index.html` を直接開く（`open ~/dev/iceberg-site/index.html`）。
+
+## 公開（GitHub Pages）2026-07-01
+- **公開URL：https://tashiroyudai.github.io/iceberg-site/** （スマホ可・誰でも共有可）
+- リポジトリ：https://github.com/TashiroYudai/iceberg-site （public・gh CLI で作成）
+- **更新方法**：`index.html` を編集 → `cd ~/dev/iceberg-site && git add -A && git commit -m "..." && git push` → 数十秒で反映
+- 独自ドメインを使う場合：リポジトリ設定 or `gh api .../pages` で CNAME 設定。
