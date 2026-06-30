@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- ============================================================= -->
+<!--  PLACEHOLDER コンテンツ：社名・連絡先などは下記 3 か所を差し替え   -->
+<!--   1) <title> と nav の brand                                   -->
+<!--   2) #contact セクションのメール/電話/会社情報                   -->
+<!--   3) footer の社名・コピーライト                                -->
+<!-- ============================================================= -->
+<title>FATHOM — 見えない課題まで潜って、解決する。</title>
+<meta name="description" content="その課題は、氷山の一角かもしれません。私たちは水面下に潜って本当の課題を突き止め、スマホアプリ・ホームページ・社内システムという手段で解決します。" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================ TOKENS ============================ */
+:root{
+  /* 旅程の色：水面（明）→ 深海（暗） */
+  --sky:#cfe7f3;       /* 水面上の空・氷 */
+  --ice:#f3fbff;       /* 氷のハイライト */
+  --glacier:#74b9d8;   /* 陽の当たる氷 */
+  --tide:#1f6f96;      /* 水面遷移帯 */
+  --deep1:#0c3a57;     /* 深海 */
+  --abyss:#04141f;     /* 深淵 */
+  --lumen:#7fe6ff;     /* 生物発光のアクセント（寒色・電光） */
+  --lumen-soft:#3aa9cf;
+  --ink:#06283d;       /* 水面上の文字 */
+  --foam:#e9f6fd;      /* 水面下の文字 */
+  --foam-dim:#9fc3d6;
+
+  --maxw:1180px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+/* ============================ RESET ============================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:"IBM Plex Sans JP",system-ui,sans-serif;
+  color:var(--foam);
+  background:var(--abyss);
+  line-height:1.75;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--lumen);color:var(--abyss)}
+
+/* ===================== 固定の海（背景レイヤー）===================== */
+#sea{position:fixed;inset:0;z-index:-3;background:var(--sky);transition:background-color .15s linear}
+/* 上部の光（ゴッドレイ）— 深くなると消える */
+#rays{position:fixed;inset:0;z-index:-2;pointer-events:none;mix-blend-mode:screen;opacity:1;
+  background:
+    linear-gradient(102deg, transparent 0 12%, rgba(255,255,255,.10) 12% 14%, transparent 14% 27%, rgba(255,255,255,.07) 27% 29%, transparent 29% 46%, rgba(255,255,255,.12) 46% 48%, transparent 48% 64%, rgba(255,255,255,.06) 64% 66%, transparent 66% 83%, rgba(255,255,255,.09) 83% 85%, transparent 85%);
+  background-size:140% 140%;
+  animation:rayDrift 14s ease-in-out infinite alternate;
+}
+@keyframes rayDrift{from{background-position:0% 0%}to{background-position:30% 12%}}
+/* 泡 */
+#bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s linear}
+.bubble{position:absolute;bottom:-40px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(180,225,245,.06) 70%);
+  border:1px solid rgba(255,255,255,.18);
+  animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) translateX(0);opacity:0}
+  10%{opacity:.7}
+  90%{opacity:.5}
+  100%{transform:translateY(-112vh) translateX(var(--drift,20px));opacity:0}
+}
+
+/* ====================== スクロール進捗バー ====================== */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;
+  background:linear-gradient(90deg,var(--lumen-soft),var(--lumen));box-shadow:0 0 12px var(--lumen)}
+
+/* =========================== NAV =========================== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(18px,5vw,52px);transition:background-color .4s var(--ease),backdrop-filter .4s,box-shadow .4s}
+.nav.scrolled{background:rgba(4,20,31,.55);backdrop-filter:blur(14px) saturate(140%);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.brand{display:flex;align-items:center;gap:11px;font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:.16em;
+  font-size:1.02rem;color:var(--ink);transition:color .5s linear}
+.nav.deep .brand{color:var(--foam)}
+.brand .mark{width:22px;height:22px;flex:none}
+.nav-links{display:flex;align-items:center;gap:clamp(14px,2.4vw,34px)}
+.nav-links a{font-size:.84rem;letter-spacing:.04em;color:var(--ink);opacity:.78;transition:opacity .25s,color .5s linear}
+.nav.deep .nav-links a{color:var(--foam)}
+.nav-links a:hover{opacity:1}
+.nav-cta{font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.08em;
+  border:1px solid currentColor;border-radius:999px;padding:9px 18px;color:var(--ink);transition:.3s var(--ease),color .5s linear}
+.nav.deep .nav-cta{color:var(--lumen)}
+.nav-cta:hover{background:var(--lumen);color:var(--abyss)!important;border-color:var(--lumen);box-shadow:0 0 22px rgba(127,230,255,.5)}
+.nav-links a.lnk{display:none}
+@media(min-width:860px){.nav-links a.lnk{display:inline}}
+
+/* ====================== 深度ゲージ（固定）====================== */
+.gauge{position:fixed;right:clamp(14px,3vw,38px);top:50%;transform:translateY(-50%);z-index:40;
+  display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;
+  font-family:"IBM Plex Mono",monospace;color:var(--ink);transition:color .5s linear,opacity .4s}
+.nav.deep ~ .gauge,.gauge.deep{color:var(--foam)}
+.gauge .track{position:relative;width:2px;height:56vh;background:linear-gradient(var(--ink),transparent);opacity:.35}
+.gauge.deep .track{background:linear-gradient(rgba(233,246,253,.5),rgba(233,246,253,.05))}
+.gauge .tick{position:absolute;left:50%;transform:translateX(-50%);width:9px;height:1px;background:currentColor;opacity:.5}
+/* 潜水艦（深度ゲージのレールを降りていく） */
+.sub{position:absolute;left:50%;top:0;width:80px;transform:translateX(-84%);
+  transition:top .12s linear;pointer-events:none;will-change:top;filter:drop-shadow(-4px 6px 9px rgba(0,12,20,.42));
+  /* 光の色：浅い=シアン → 深い=黄色（暗くなるほど黄色く点灯） */
+  --lightcol:color-mix(in srgb, #7fe6ff, #ffce3a calc(var(--lit,0) * 100%))}
+.sub svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:50% 50%;
+  animation:subsway 4.6s ease-in-out infinite}
+@keyframes subsway{0%,100%{transform:rotate(-2.5deg) translateY(-1px)}50%{transform:rotate(2.5deg) translateY(1px)}}
+.sub .prop{transform-box:fill-box;transform-origin:50% 50%;animation:subspin .55s linear infinite}
+@keyframes subspin{to{transform:rotate(1turn)}}
+.sub .beam{animation:subbeam 3.4s ease-in-out infinite}
+@keyframes subbeam{0%,100%{opacity:calc(var(--lit,0)*.55)}50%{opacity:calc(var(--lit,0)*.9)}}
+.sub .port{fill:#7fe6ff;fill:var(--lightcol);opacity:calc(.3 + var(--lit,0)*.7)}
+.sub .bow{fill:#eaffff;fill:color-mix(in srgb, #eaffff, #fff0a0 calc(var(--lit,0) * 100%));opacity:calc(.45 + var(--lit,0)*.55)}
+.sub .halo{fill:#7fe6ff;fill:var(--lightcol);opacity:calc(var(--lit,0)*.4)}
+.sub .bub{opacity:0;animation:subbub 2.4s ease-in-out infinite}
+.sub .bub.b2{animation-delay:.8s}.sub .bub.b3{animation-delay:1.5s}
+@keyframes subbub{0%{transform:translate(0,0);opacity:0}25%{opacity:.7}100%{transform:translate(13px,-5px);opacity:0}}
+.gauge .read{font-size:.82rem;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.gauge .read small{display:block;font-size:.56rem;letter-spacing:.22em;opacity:.6;font-weight:500;text-align:center}
+@media(max-width:760px){
+  .gauge{right:12px}
+  .gauge .read,.gauge .tick{display:none}
+  .gauge .track{height:46vh}
+  .sub{width:62px}
+}
+
+/* =========================== LAYOUT =========================== */
+section{position:relative;z-index:1;padding-inline:clamp(20px,6vw,40px)}
+.wrap{max-width:var(--maxw);margin-inline:auto;width:100%}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--lumen-soft);display:inline-flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:30px;height:1px;background:currentColor;opacity:.7}
+h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1.18;letter-spacing:.01em}
+
+/* frosted "ice" panel */
+.panel{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:18px}
+
+/* ============================ HERO ============================ */
+.hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink)}
+.hero .grid{display:grid;gap:clamp(28px,5vw,56px);grid-template-columns:1fr;align-items:center}
+.hero .grid>*{min-width:0}
+@media(min-width:940px){.hero .grid{grid-template-columns:1.05fr .95fr}}
+.hero h1{font-size:clamp(2.4rem,6vw,4.5rem);color:var(--ink)}
+.hero h1 .em{position:relative;white-space:nowrap}
+.hero h1 .em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.14em;
+  background:linear-gradient(90deg,var(--glacier),var(--lumen));opacity:.55;border-radius:2px;
+  transform:scaleX(0);transform-origin:left;animation:wipe 1s .6s var(--ease) forwards}
+@keyframes wipe{to{transform:scaleX(1)}}
+.hero .lead{margin-top:22px;font-size:clamp(1rem,1.6vw,1.18rem);max-width:33ch;color:#0c3650}
+.hero .chips{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.04em;padding:8px 14px;border-radius:999px;
+  background:rgba(255,255,255,.5);border:1px solid rgba(8,40,61,.14);color:var(--ink);
+  animation:bob 5s ease-in-out infinite}
+.chip:nth-child(2){animation-delay:.6s}
+.chip:nth-child(3){animation-delay:1.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* iceberg cross-section */
+.berg{position:relative;filter:drop-shadow(0 38px 52px rgba(8,40,61,.22))}
+.berg svg{width:100%;height:auto;overflow:visible}
+.berg .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;fill:var(--ink)}
+.berg .lbl.b{fill:#0c3a57}
+.berg .pct{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900}
+.berg .ice{animation:floaty 7s ease-in-out infinite}
+.berg .under{animation:underpulse 7s ease-in-out infinite;transform-origin:center}
+.berg .ray{animation:shimmer 6s ease-in-out infinite}
+.berg .ray2{animation-duration:8.5s;animation-delay:-2.5s}
+.berg .edge2{animation:edgepulse 5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes underpulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes shimmer{0%,100%{opacity:.04}50%{opacity:.14}}
+@keyframes edgepulse{0%,100%{opacity:.28}50%{opacity:.72}}
+.draw{stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 2.4s .3s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.scrollcue{margin-top:54px;display:inline-flex;align-items:center;gap:12px;font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;letter-spacing:.18em;color:var(--ink);opacity:.85}
+.scrollcue .dive{width:24px;height:38px;border:1.5px solid currentColor;border-radius:14px;position:relative}
+.scrollcue .dive::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:4px;border-radius:50%;
+  background:currentColor;transform:translateX(-50%);animation:dive 1.7s var(--ease) infinite}
+@keyframes dive{0%{opacity:0;top:7px}30%{opacity:1}100%{opacity:0;top:22px}}
+
+/* ========================= WATERLINE ========================= */
+.waterline{position:relative;min-height:62svh;display:grid;place-items:center;text-align:center;color:var(--foam);overflow:hidden}
+.waterline .surface{position:absolute;left:-5%;right:-5%;top:0;height:120px;
+  background:linear-gradient(180deg,rgba(255,255,255,.35),transparent);
+  filter:blur(2px);opacity:.6}
+.waterline .surface::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.25) 22px 24px);
+  -webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent);
+  animation:caustic 6s linear infinite}
+@keyframes caustic{to{transform:translateX(-24px)}}
+.waterline .big{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;
+  font-size:clamp(1.8rem,5.2vw,3.6rem);line-height:1.3;max-width:18ch;margin-inline:auto}
+.waterline .big b{color:var(--lumen);text-shadow:0 0 30px rgba(127,230,255,.45)}
+.waterline .wnote{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.2em;color:var(--foam-dim)}
+
+/* ========================= SERVICES ========================= */
+.services{padding-block:clamp(70px,11vw,140px);color:var(--foam)}
+.sec-head{max-width:62ch}
+.sec-head h2{font-size:clamp(1.9rem,4.4vw,3rem);margin-top:18px}
+.sec-head p{margin-top:16px;color:var(--foam-dim);font-size:1.02rem}
+.cards{margin-top:clamp(34px,5vw,56px);display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{padding:30px 26px 32px;position:relative;overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s,border-color .5s}
+.card .no{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.16em;color:var(--lumen-soft)}
+.card h3{font-size:1.32rem;margin:16px 0 12px;color:var(--foam)}
+.card p{color:var(--foam-dim);font-size:.95rem}
+.card .ic{width:46px;height:46px;color:var(--lumen)}
+.card ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:7px}
+.card li{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.03em;color:var(--foam-dim);
+  padding-left:18px;position:relative}
+.card li::before{content:"›";position:absolute;left:2px;color:var(--lumen-soft)}
+.card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--lumen),transparent);
+  transform:scaleX(0);transform-origin:center;transition:transform .5s var(--ease)}
+.card:hover{transform:translateY(-8px);border-color:rgba(127,230,255,.4);box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.card:hover::after{transform:scaleX(1)}
+
+/* ========================== DEPTH (10/90) ========================== */
+.depth{padding-block:clamp(70px,11vw,150px);color:var(--foam)}
+.depth .split{display:grid;gap:clamp(30px,5vw,64px);grid-template-columns:1fr;align-items:center}
+@media(min-width:880px){.depth .split{grid-template-columns:.9fr 1.1fr}}
+.statbig{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1;
+  font-size:clamp(4.5rem,16vw,11rem);background:linear-gradient(180deg,var(--ice),var(--lumen));
+  -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+.statbig small{font-size:.28em;-webkit-text-fill-color:var(--foam-dim);color:var(--foam-dim);letter-spacing:0}
+.depth h2{font-size:clamp(1.8rem,4vw,2.7rem);margin:6px 0 18px}
+.depth p{color:var(--foam-dim);font-size:1.04rem;max-width:48ch}
+.bars{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+.bar{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:14px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--foam-dim)}
+.bar .track{height:10px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--lumen-soft),var(--lumen));width:0;transition:width 1.4s var(--ease)}
+.bar.visible .fill{width:var(--w)}
+
+/* ========================== APPROACH (strata) ========================== */
+.approach{padding-block:clamp(70px,11vw,150px);color:var(--foam)}
+.strata{margin-top:clamp(34px,5vw,56px);display:flex;flex-direction:column;gap:0;
+  border-left:1px solid rgba(255,255,255,.15);margin-left:8px}
+.stratum{position:relative;padding:26px 0 30px 30px}
+.stratum::before{content:"";position:absolute;left:-6px;top:32px;width:11px;height:11px;border-radius:50%;
+  background:var(--abyss);border:2px solid var(--lumen);box-shadow:0 0 14px rgba(127,230,255,.5)}
+.stratum .d{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.14em;color:var(--lumen-soft)}
+.stratum h3{font-size:1.3rem;margin:8px 0 8px;color:var(--foam)}
+.stratum p{color:var(--foam-dim);font-size:.97rem;max-width:56ch}
+
+/* ========================== CONTACT ========================== */
+.contact{padding-block:clamp(90px,14vw,190px);text-align:center;color:var(--foam)}
+.contact h2{font-size:clamp(2.1rem,6vw,4rem)}
+.contact h2 b{color:var(--lumen);text-shadow:0 0 40px rgba(127,230,255,.5)}
+.contact p{margin:20px auto 0;color:var(--foam-dim);max-width:46ch;font-size:1.05rem}
+.contact .actions{margin-top:40px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.btn{font-family:"IBM Plex Mono",monospace;font-size:.86rem;letter-spacing:.08em;padding:16px 32px;border-radius:999px;
+  transition:.3s var(--ease);display:inline-flex;align-items:center;gap:10px}
+.btn.primary{background:var(--lumen);color:var(--abyss);box-shadow:0 0 0 rgba(127,230,255,.6)}
+.btn.primary:hover{box-shadow:0 0 34px rgba(127,230,255,.7);transform:translateY(-3px)}
+.btn.ghost{border:1px solid rgba(255,255,255,.3);color:var(--foam)}
+.btn.ghost:hover{border-color:var(--lumen);color:var(--lumen)}
+.contact .meta{margin-top:46px;font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.06em;color:var(--foam-dim);
+  display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:center}
+.contact .meta a:hover{color:var(--lumen)}
+
+/* ========================== FOOTER ========================== */
+footer{position:relative;z-index:1;padding:48px clamp(20px,6vw,40px) 56px;color:var(--foam-dim);
+  border-top:1px solid rgba(255,255,255,.08);font-size:.82rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+footer .brand{color:var(--foam)}
+footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+
+/* ========================= REVEAL ========================= */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+/* ===================== REDUCED MOTION ===================== */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.001s!important}
+  .reveal{opacity:1;transform:none}
+  #bubbles{display:none}
+  .draw{stroke-dashoffset:0}
+}
+:focus-visible{outline:2px solid var(--lumen);outline-offset:3px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- 固定背景レイヤー -->
+<div id="sea"></div>
+<div id="rays"></div>
+<div id="bubbles" aria-hidden="true"></div>
+<div id="progress"></div>
+
+<!-- 深度ゲージ -->
+<aside class="gauge" aria-hidden="true">
+  <div class="read"><span id="depthRead">0</span>m<small>DEPTH</small></div>
+  <div class="track">
+    <span class="tick" style="top:0%"></span>
+    <span class="tick" style="top:25%"></span>
+    <span class="tick" style="top:50%"></span>
+    <span class="tick" style="top:75%"></span>
+    <span class="tick" style="top:100%"></span>
+    <div class="sub" id="sub" aria-hidden="true">
+      <svg viewBox="0 0 124 64" role="img">
+        <defs>
+          <linearGradient id="subBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#dcebf3"/><stop offset=".55" stop-color="#6f97ac"/><stop offset="1" stop-color="#274656"/>
+          </linearGradient>
+          <linearGradient id="subBeam" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="var(--lightcol, #cdf6ff)" stop-opacity=".9"/><stop offset="1" stop-color="var(--lightcol, #cdf6ff)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- サーチライト（前方＝左） -->
+        <polygon class="beam" points="22,28 22,40 -26,54 -26,14" fill="url(#subBeam)" style="mix-blend-mode:screen"/>
+        <!-- 気泡（後方＝右へ） -->
+        <circle class="bub b1" cx="115" cy="34" r="2.1" fill="#cdeef8"/>
+        <circle class="bub b2" cx="118" cy="30" r="1.4" fill="#cdeef8"/>
+        <circle class="bub b3" cx="119" cy="38" r="1.6" fill="#cdeef8"/>
+        <!-- スクリュー（後方＝右） -->
+        <rect x="104" y="33" width="9" height="2" rx="1" fill="#8fb1c2"/>
+        <g class="prop">
+          <ellipse cx="113" cy="34" rx="2.6" ry="9" fill="#dbeaf2"/>
+          <ellipse cx="113" cy="34" rx="9" ry="2.6" fill="#b7d2df"/>
+        </g>
+        <!-- 尾翼 -->
+        <path d="M96 20 L106 11 L100 23 Z" fill="#46708a"/>
+        <path d="M96 48 L106 53 L100 41 Z" fill="#46708a"/>
+        <!-- 艦体 -->
+        <ellipse cx="62" cy="34" rx="44" ry="15" fill="url(#subBody)" stroke="#7fe6ff" stroke-width="1" stroke-opacity=".45"/>
+        <path d="M18 34 a44 15 0 0 0 88 0 Z" fill="#04141f" opacity=".14"/>
+        <!-- セイル（司令塔・上）＋潜望鏡 -->
+        <rect x="56" y="12" width="22" height="13" rx="6" fill="#365b72"/>
+        <line x1="74" y1="15" x2="80" y2="7" stroke="#9fc3d6" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- 舷窓 -->
+        <circle class="port" cx="44" cy="34" r="3.1"/>
+        <circle class="port" cx="60" cy="34" r="3.1"/>
+        <circle class="port" cx="76" cy="34" r="3.1"/>
+        <!-- 船首灯（前＝左）＋暖色グロー -->
+        <circle class="halo" cx="22" cy="34" r="8.5"/>
+        <circle class="bow" cx="22" cy="34" r="3.8"/>
+      </svg>
+    </div>
+  </div>
+</aside>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a class="brand" href="#surface" aria-label="FATHOM ホーム">
+    <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2 L19 9 L12 6.5 L5 9 Z" fill="currentColor"/>
+      <path d="M12 6.5 L19 9 L12 22 L5 9 Z" fill="currentColor" opacity=".55"/>
+      <line x1="2" y1="8.2" x2="22" y2="8.2" stroke="#7fe6ff" stroke-width="1" stroke-dasharray="2 2"/>
+    </svg>
+    <span>FATHOM</span>
+  </a>
+  <nav class="nav-links" aria-label="メイン">
+    <a class="lnk" href="#services">サービス</a>
+    <a class="lnk" href="#depth">考え方</a>
+    <a class="lnk" href="#approach">進め方</a>
+    <a class="nav-cta" href="#contact">相談する</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ===================== HERO / 0m 水面 ===================== -->
+  <section class="hero" id="surface">
+    <div class="wrap grid">
+      <div>
+        <span class="eyebrow">00m · 水面</span>
+        <h1 style="margin-top:18px">その課題は、<br><span class="em">氷山の一角。</span></h1>
+        <p class="lead">「アプリが欲しい」「サイトを直したい」——そのご相談の多くは、もっと深いところにある本当の課題の入り口です。まず潜って課題の全体をつかみ、最適な手段で解決します。</p>
+        <div class="chips" aria-label="解決の手段">
+          <span class="chip">📱 スマホアプリ</span>
+          <span class="chip">🌐 ホームページ</span>
+          <span class="chip">⚙️ 社内システム</span>
+        </div>
+        <a class="scrollcue" href="#cross">
+          <span class="dive" aria-hidden="true"></span> 水面下へ潜る
+        </a>
+      </div>
+
+      <!-- 氷山の断面図（10% / 90%）— 結晶質ファセット・水中発光・水面反射・浮遊 -->
+      <div class="berg" id="cross" aria-label="氷山の断面：見えている課題は10%、水面下の本当の課題が90%">
+        <svg viewBox="0 0 440 580" role="img" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA1" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6f3fb"/></linearGradient>
+            <linearGradient id="gA2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dcedf7"/><stop offset="1" stop-color="#bcd9e8"/></linearGradient>
+            <linearGradient id="gA3" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b6d2e2"/><stop offset="1" stop-color="#8fb6cc"/></linearGradient>
+            <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#9ccce2"/><stop offset=".3" stop-color="#4a97ba"/><stop offset=".62" stop-color="#1a5f84"/><stop offset="1" stop-color="#062236"/>
+            </linearGradient>
+            <linearGradient id="gSurf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="gRef" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+            <radialGradient id="gUnder" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7fe6ff" stop-opacity=".24"/><stop offset="1" stop-color="#7fe6ff" stop-opacity="0"/></radialGradient>
+            <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+          </defs>
+
+          <!-- 水中のアンビエント発光 -->
+          <ellipse class="under" cx="222" cy="430" rx="150" ry="132" fill="url(#gUnder)" filter="url(#soft)"/>
+
+          <g class="ice">
+            <!-- 水面下の本体 -->
+            <path d="M158 192 L124 250 L110 330 L126 408 L170 480 L220 540 L276 476 L308 392 L320 300 L308 232 L300 192 Z" fill="url(#gB)"/>
+            <!-- 影のファセット -->
+            <path d="M110 330 L126 408 L170 480 L220 540 L190 320 Z" fill="#04141f" opacity=".22"/>
+            <path d="M320 300 L308 392 L276 476 L220 540 L256 310 Z" fill="#04141f" opacity=".22"/>
+            <!-- ハイライトのファセット -->
+            <path d="M158 192 L124 250 L190 320 L214 192 Z" fill="#ffffff" opacity=".08"/>
+            <path d="M300 192 L308 232 L320 300 L256 310 L272 192 Z" fill="#ffffff" opacity=".05"/>
+            <path d="M190 320 L256 310 L220 392 Z" fill="#ffffff" opacity=".05"/>
+            <!-- 内部の稜線 -->
+            <path d="M214 192 L190 320 L220 540 M272 192 L256 310 L220 540 M124 250 L190 320 M320 300 L256 310 M190 320 L256 310 M110 330 L190 320 M308 392 L256 310" fill="none" stroke="#cfeaf6" stroke-width="1" opacity=".18"/>
+            <!-- 輪郭＋シアンの発光エッジ（描き込みアニメ） -->
+            <path d="M158 192 L124 250 L110 330 L126 408 L170 480 L220 540 L276 476 L308 392 L320 300 L308 232 L300 192 Z" fill="none" stroke="#7fe6ff" stroke-width="1.6" opacity=".7" class="edge draw" pathLength="1200" filter="url(#glow)"/>
+            <!-- 生物発光の内側エッジ -->
+            <path d="M214 192 L190 320 M272 192 L256 310" fill="none" stroke="#7fe6ff" stroke-width="1.2" opacity=".35" class="edge2"/>
+
+            <!-- 水面直下の反射 -->
+            <path d="M200 192 L236 230 L272 192 Z" fill="url(#gRef)" opacity=".22" filter="url(#glow)"/>
+
+            <!-- 水面上の峰（結晶ファセット） -->
+            <path d="M236 60 L198 116 L158 192 L214 192 Z" fill="url(#gA1)"/>
+            <path d="M236 60 L214 192 L272 192 L286 104 L262 132 Z" fill="url(#gA2)"/>
+            <path d="M286 104 L306 150 L300 192 L272 192 Z" fill="url(#gA3)"/>
+            <!-- 峰の輪郭（描き込みアニメ） -->
+            <path d="M236 60 L262 132 L286 104 L306 150 L300 192 L158 192 L198 116 Z" fill="none" stroke="#ffffff" stroke-width="1.4" opacity=".85" class="draw" pathLength="1200"/>
+            <!-- 雪のハイライト稜線 -->
+            <path d="M236 60 L198 116" fill="none" stroke="#ffffff" stroke-width="2.6" opacity=".9" stroke-linecap="round"/>
+            <!-- 峰の内部稜線 -->
+            <path d="M236 60 L214 192 M286 104 L272 192" fill="none" stroke="#0c3a57" stroke-width=".8" opacity=".12"/>
+          </g>
+
+          <!-- 光のシャフト（スクリーン合成） -->
+          <g style="mix-blend-mode:screen">
+            <path class="ray" d="M150 192 L178 192 L150 552 L116 552 Z" fill="#eaf7ff" opacity=".07"/>
+            <path class="ray ray2" d="M252 192 L288 192 L304 552 L262 552 Z" fill="#eaf7ff" opacity=".05"/>
+          </g>
+
+          <!-- 水面 -->
+          <rect x="6" y="185" width="428" height="14" fill="url(#gSurf)"/>
+          <line x1="14" y1="192" x2="426" y2="192" stroke="#bfe0f0" stroke-width="1.5" stroke-dasharray="5 7" opacity=".85"/>
+          <line x1="14" y1="190.5" x2="426" y2="190.5" stroke="#ffffff" stroke-width="1" opacity=".35"/>
+
+          <!-- ラベル -->
+          <g class="annot">
+            <line x1="300" y1="150" x2="338" y2="118" stroke="#0c3a57" stroke-width="1" opacity=".4"/>
+            <circle cx="300" cy="150" r="2.4" fill="#0c3a57" opacity=".6"/>
+            <text class="lbl" x="338" y="114">見えている課題</text>
+            <text class="lbl pct" x="338" y="139" style="font-size:20px">10%</text>
+            <text class="lbl b" x="34" y="356" style="fill:#0c3a57">水面下の課題</text>
+            <text class="lbl pct" x="34" y="392" style="font-size:34px;fill:#0c3a57">90%</text>
+            <text class="lbl" x="34" y="414" style="fill:#3f6075;font-size:9px;letter-spacing:.14em">調べて初めて見えてくる</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 水面を越える ===================== -->
+  <section class="waterline" aria-label="水面下へ">
+    <div class="surface" aria-hidden="true"></div>
+    <div class="wrap reveal">
+      <p class="big">水面下に、<br>本当の<b>課題</b>がある。</p>
+      <p class="wnote">— 調べるほど、課題は大きく深くなる —</p>
+    </div>
+  </section>
+
+  <!-- ===================== SERVICES / −60m ===================== -->
+  <section class="services" id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">−60m · 解決の手段</span>
+        <h2>見つけた課題を、<br>3つの手段で解く。</h2>
+        <p>課題に合わせて、最適な手段を選びます。アプリ・ホームページ・社内システム——どれも企画から運用まで、一気通貫で。</p>
+      </div>
+      <div class="cards">
+
+        <article class="card panel reveal d1">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18.5" x2="14" y2="18.5"/>
+          </svg>
+          <span class="no">SVC—01</span>
+          <h3>スマホアプリ開発</h3>
+          <p>現場やお客様との接点が課題なら、手元で動くアプリへ。iOS / Android を企画から公開・運用まで。</p>
+          <ul>
+            <li>iOS / Android</li><li>UI/UX 設計</li><li>App Store 申請代行</li><li>公開後の改善運用</li>
+          </ul>
+        </article>
+
+        <article class="card panel reveal d2">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/>
+          </svg>
+          <span class="no">SVC—02</span>
+          <h3>ホームページ制作</h3>
+          <p>「伝わらない・見つからない・問い合わせが来ない」を Web で解く。戦略設計から実装・改善まで。</p>
+          <ul>
+            <li>戦略・情報設計</li><li>デザイン / 実装</li><li>表示速度・SEO</li><li>公開後の運用</li>
+          </ul>
+        </article>
+
+        <article class="card panel reveal d3">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M22 12h-3M5 12H2M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M18.4 18.4l-2.1-2.1M7.7 7.7 5.6 5.6"/>
+          </svg>
+          <span class="no">SVC—03</span>
+          <h3>社内システム開発</h3>
+          <p>属人化・手作業・二重入力——業務に潜む課題を、回り続ける仕組みに変えます。</p>
+          <ul>
+            <li>業務フロー設計</li><li>管理・基幹システム</li><li>既存ツール連携</li><li>保守・改修</li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DEPTH 10/90 / −180m ===================== -->
+  <section class="depth" id="depth">
+    <div class="wrap split">
+      <div class="reveal">
+        <div class="statbig">90<small>%</small></div>
+      </div>
+      <div class="reveal d1">
+        <span class="eyebrow">−180m · 課題の深さ</span>
+        <h2>気づいている課題は、<br>全体のおよそ 10%。</h2>
+        <p>残りの 90% は、調べて初めて見えてくる本当の課題。根っこにある原因まで潜って突き止めるから、手段選びを間違えません。</p>
+        <div class="bars" id="bars" aria-hidden="true">
+          <div class="bar"><span>気づいている課題</span><span class="track"><span class="fill" style="--w:10%"></span></span></div>
+          <div class="bar"><span>潜って見つかる課題</span><span class="track"><span class="fill" style="--w:60%"></span></span></div>
+          <div class="bar"><span>根本の原因</span><span class="track"><span class="fill" style="--w:30%"></span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== APPROACH（strata）/ −280m ===================== -->
+  <section class="approach" id="approach">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">−280m · 進め方</span>
+        <h2>課題は、地層のように深い。</h2>
+        <p>見えている課題から、その下の原因へ。一段ずつ潜って確かめ、解決の手段へと変えていきます。</p>
+      </div>
+      <div class="strata">
+        <div class="stratum reveal"><span class="d">LAYER −1 / ヒアリング</span><h3>見えている課題を聞く</h3>
+          <p>「何に困っているか」をうかがい、表に出ている課題を言葉にして整理します。</p></div>
+        <div class="stratum reveal d1"><span class="d">LAYER −2 / リサーチ</span><h3>潜って、深掘りする</h3>
+          <p>業務・データ・現場を調べ、表面の課題の下にある本当の原因を突き止めます。</p></div>
+        <div class="stratum reveal d2"><span class="d">LAYER −3 / 設計・開発</span><h3>手段を決めて、つくる</h3>
+          <p>アプリ・ホームページ・社内システムから最適な手段を選び、解決策を形にします。</p></div>
+        <div class="stratum reveal d3"><span class="d">LAYER −4 / 運用</span><h3>動かし、改善し続ける</h3>
+          <p>公開後も伴走。使われ方を見ながら、課題が再び深くならないよう支えます。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT / −420m 深淵 ===================== -->
+  <section class="contact" id="contact">
+    <div class="wrap reveal">
+      <span class="eyebrow" style="justify-content:center">−420m · Contact</span>
+      <h2 style="margin-top:18px">その課題、<br><b>一緒に潜りませんか。</b></h2>
+      <p>「何が問題かもまだ曖昧」——そんな段階で大丈夫です。まず一緒に潜って、本当の課題と、それを解く手段を見つけましょう。</p>
+      <div class="actions">
+        <!-- PLACEHOLDER: メールアドレスを差し替え -->
+        <a class="btn primary" href="mailto:hello@example.com">メールで相談する →</a>
+        <a class="btn ghost" href="#surface">水面に戻る ↑</a>
+      </div>
+      <div class="meta">
+        <!-- PLACEHOLDER: 会社情報を差し替え -->
+        <span>株式会社ファゾム（仮）</span>
+        <a href="mailto:hello@example.com">hello@example.com</a>
+        <a href="tel:00-0000-0000">00-0000-0000</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <!-- PLACEHOLDER: 社名・年 -->
+    <span class="brand">FATHOM</span>
+    <span class="seabed">−420m · SEABED — © 2026 FATHOM Inc.（仮）</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+  const lerp = (a,b,t) => a + (b-a)*t;
+
+  /* ---- 旅程の色：scroll 進捗 0..1 を補間 ---- */
+  const stops = [
+    [0.00, [207,231,243]], // sky
+    [0.16, [127,193,222]],
+    [0.30, [ 31,111,150]], // tide
+    [0.46, [ 18, 88,124]],
+    [0.64, [ 12, 58, 87]], // deep
+    [0.82, [  6, 36, 54]],
+    [1.00, [  3, 16, 26]], // abyss
+  ];
+  const colorAt = (p) => {
+    for (let i=0;i<stops.length-1;i++){
+      const [p0,c0]=stops[i], [p1,c1]=stops[i+1];
+      if (p<=p1){ const t=(p-p0)/(p1-p0||1);
+        return `rgb(${Math.round(lerp(c0[0],c1[0],t))},${Math.round(lerp(c0[1],c1[1],t))},${Math.round(lerp(c0[2],c1[2],t))})`; }
+    }
+    return `rgb(3,16,26)`;
+  };
+
+  const sea = document.getElementById('sea');
+  const rays = document.getElementById('rays');
+  const bubbles = document.getElementById('bubbles');
+  const progress = document.getElementById('progress');
+  const nav = document.getElementById('nav');
+  const gauge = document.querySelector('.gauge');
+  const sub = document.getElementById('sub');
+  const depthRead = document.getElementById('depthRead');
+  const MAX_DEPTH = 420;
+
+  let ticking = false;
+  const onScroll = () => {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - innerHeight;
+    const p = clamp(max>0 ? scrollY/max : 0, 0, 1);
+
+    sea.style.backgroundColor = colorAt(p);
+    rays.style.opacity = clamp(1 - p*2.4, 0, 1).toFixed(3);      // 光は浅いところだけ
+    bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3); // 泡は深いところで
+    progress.style.width = (p*100).toFixed(2)+'%';
+
+    // 文字色の反転（水面 → 深海）
+    const deep = p > 0.16;
+    nav.classList.toggle('deep', deep);
+    if (gauge) gauge.classList.toggle('deep', deep);
+
+    // ナビ背景
+    nav.classList.toggle('scrolled', scrollY > 40);
+
+    // 深度ゲージ
+    const depth = Math.round(p*MAX_DEPTH);
+    if (depthRead) depthRead.textContent = depth === 0 ? '0' : '−'+depth;
+    if (sub){
+      sub.style.top = (p*100).toFixed(1)+'%';
+      sub.style.setProperty('--lit', clamp((p-0.12)*1.5, 0, 1).toFixed(3));
+    }
+
+    ticking = false;
+  };
+  const requestTick = () => { if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } };
+  addEventListener('scroll', requestTick, {passive:true});
+  addEventListener('resize', requestTick, {passive:true});
+  onScroll();
+
+  /* ---- 泡を生成 ---- */
+  if (!reduce){
+    const N = innerWidth < 700 ? 14 : 26;
+    for (let i=0;i<N;i++){
+      const b = document.createElement('span');
+      b.className = 'bubble';
+      const size = 4 + Math.round(((i*37)%10)/10*16); // 4..20px 疑似ランダム
+      const dur = 9 + (i*53)%12;
+      b.style.width = b.style.height = size+'px';
+      b.style.left = ((i*61)%100)+'%';
+      b.style.animationDuration = dur+'s';
+      b.style.animationDelay = (-(i*31)%dur)+'s';
+      b.style.setProperty('--drift', (((i%2)?1:-1) * (15+(i*13)%40))+'px');
+      bubbles.appendChild(b);
+    }
+  }
+
+  /* ---- スクロール・リビール ---- */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---- 10/90 バー：表示時にアニメ ---- */
+  const bars = document.getElementById('bars');
+  if (bars){
+    const bio = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){
+        bars.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.classList.add('visible'), i*180));
+        bio.disconnect();
+      }});
+    }, {threshold:0.4});
+    bio.observe(bars);
+  }
+})();
+</script>
+</body>
+</html>
