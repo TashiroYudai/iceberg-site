@@ -51,18 +51,26 @@ img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--lumen);color:var(--abyss)}
 
-/* ===================== 固定の海（背景レイヤー）===================== */
-#sea{position:fixed;inset:0;z-index:-3;background:var(--sky);transition:background-color .15s linear}
+/* ===================== 固定の海（背景レイヤー：奥→手前）===================== */
+#sea{position:fixed;inset:0;z-index:-5;background:var(--sky);transition:background-color .15s linear}
+/* 遠景の氷山シルエット（最も遅い視差） */
+#far{position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.3;filter:blur(4px);will-change:transform;
+  transform:translate3d(calc(var(--px,0)*-8px), calc(var(--py,0)*-6px + var(--p,0)*36px), 0) scale(1.06)}
+#far svg{width:100%;height:100%}
 /* 上部の光（ゴッドレイ）— 深くなると消える */
-#rays{position:fixed;inset:0;z-index:-2;pointer-events:none;mix-blend-mode:screen;opacity:1;
+#rays{position:fixed;inset:0;z-index:-3;pointer-events:none;mix-blend-mode:screen;opacity:1;will-change:transform,opacity;
   background:
     linear-gradient(102deg, transparent 0 12%, rgba(255,255,255,.10) 12% 14%, transparent 14% 27%, rgba(255,255,255,.07) 27% 29%, transparent 29% 46%, rgba(255,255,255,.12) 46% 48%, transparent 48% 64%, rgba(255,255,255,.06) 64% 66%, transparent 66% 83%, rgba(255,255,255,.09) 83% 85%, transparent 85%);
   background-size:140% 140%;
   animation:rayDrift 14s ease-in-out infinite alternate;
-}
+  transform:translate3d(calc(var(--px,0)*10px), calc(var(--py,0)*4px), 0)}
 @keyframes rayDrift{from{background-position:0% 0%}to{background-position:30% 12%}}
-/* 泡 */
-#bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s linear}
+/* マリンスノー（中景の微粒子・canvas） */
+#snow{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:0;transition:opacity .5s linear}
+/* 泡（最前の背景・手前ほど視差大） */
+#bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;will-change:transform,opacity;
+  transition:opacity .4s linear;
+  transform:translate3d(calc(var(--px,0)*18px), calc(var(--py,0)*12px), 0)}
 .bubble{position:absolute;bottom:-40px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(180,225,245,.06) 70%);
   border:1px solid rgba(255,255,255,.18);
@@ -106,8 +114,8 @@ a{color:inherit;text-decoration:none}
 .gauge.deep .track{background:linear-gradient(rgba(233,246,253,.5),rgba(233,246,253,.05))}
 .gauge .tick{position:absolute;left:50%;transform:translateX(-50%);width:9px;height:1px;background:currentColor;opacity:.5}
 /* 潜水艦（深度ゲージのレールを降りていく） */
-.sub{position:absolute;left:50%;top:0;width:80px;transform:translateX(calc(-100% - 8px));
-  transition:top .12s linear;pointer-events:none;will-change:top;filter:drop-shadow(-4px 6px 9px rgba(0,12,20,.42));
+.sub{position:absolute;left:50%;top:0;width:80px;transform:translateX(calc(-100% - 8px)) rotate(calc(var(--dive,0)*1deg));
+  transition:top .12s linear;pointer-events:none;will-change:top,transform;filter:drop-shadow(-4px 6px 9px rgba(0,12,20,.42));
   /* 光の色：浅い=シアン → 深い=黄色（暗くなるほど黄色く点灯） */
   --lightcol:color-mix(in srgb, #7fe6ff, #ffce3a calc(var(--lit,0) * 100%))}
 .sub svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:50% 50%;
@@ -146,14 +154,23 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:18px}
 
 /* ============================ HERO ============================ */
-.hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink)}
-.hero .grid{display:flex;flex-direction:column;gap:clamp(16px,4vw,26px)}
+.hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink);
+  perspective:1200px;perspective-origin:50% 42%}
+.hero .grid{display:flex;flex-direction:column;gap:clamp(16px,4vw,26px);transform-style:preserve-3d}
 .hero-copy{display:contents}
 .hero-head{order:1}.berg{order:2}.hero-body{order:3}
 .hero .grid>*,.hero-head,.hero-body{min-width:0}
+/* hero 3D 層（手前ほど translateZ 大／ポインタ・ジャイロで視差） */
+.hero-head{transform:translate3d(calc(var(--px,0)*7px), calc(var(--py,0)*7px), 48px)}
+.berg{transform:translate3d(calc(var(--px,0)*-5px), calc(var(--py,0)*-4px), 26px) rotateY(calc(var(--p,0)*8deg)) scale(calc(1 - var(--p,0)*0.05))}
+.hero-body{transform:translate3d(calc(var(--px,0)*4px), calc(var(--py,0)*4px), 14px)}
 @media(min-width:940px){
   .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;column-gap:clamp(28px,5vw,56px);align-items:center}
-  .hero-copy{display:block}
+  .hero-copy{display:block;transform-style:preserve-3d}
+  /* デスクトップは回転で奥行きを強める */
+  .hero-head{transform:translateZ(56px) rotateX(calc(var(--py,0)*3.5deg)) rotateY(calc(var(--px,0)*5deg))}
+  .berg{transform:translateZ(30px) rotateY(calc(var(--px,0)*7deg + var(--p,0)*8deg)) rotateX(calc(var(--py,0)*-4deg)) scale(calc(1 - var(--p,0)*0.05))}
+  .hero-body{transform:translateZ(16px) rotateY(calc(var(--px,0)*2.5deg))}
 }
 @media(max-width:939px){
   .hero{align-items:start;padding-top:66px;padding-bottom:30px}
@@ -219,9 +236,11 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 .sec-head{max-width:62ch}
 .sec-head h2{font-size:clamp(1.9rem,4.4vw,3rem);margin-top:18px}
 .sec-head p{margin-top:16px;color:var(--foam-dim);font-size:1.02rem}
-.cards{margin-top:clamp(34px,5vw,56px);display:grid;gap:18px;grid-template-columns:1fr}
+.cards{margin-top:clamp(34px,5vw,56px);display:grid;gap:18px;grid-template-columns:1fr;perspective:1000px}
 @media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}}
-.card{padding:30px 26px 32px;position:relative;overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s,border-color .5s}
+.card{padding:30px 26px 32px;position:relative;overflow:hidden}
+/* カードの transition は .reveal(1s) より優先させ、ホバー追従を機敏に */
+.cards .card{transition:transform .22s var(--ease),box-shadow .5s,border-color .5s,opacity .9s var(--ease)}
 .card .no{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.16em;color:var(--lumen-soft)}
 .card h3{font-size:1.32rem;margin:16px 0 12px;color:var(--foam)}
 .card p{color:var(--foam-dim);font-size:.95rem}
@@ -232,8 +251,9 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 .card li::before{content:"›";position:absolute;left:2px;color:var(--lumen-soft)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--lumen),transparent);
   transform:scaleX(0);transform-origin:center;transition:transform .5s var(--ease)}
-.card:hover{transform:translateY(-8px);border-color:rgba(127,230,255,.4);box-shadow:0 24px 50px rgba(0,0,0,.35)}
-.card:hover::after{transform:scaleX(1)}
+.cards .card:hover{transform:translateY(-8px) rotateX(calc(var(--ry,0)*-7deg)) rotateY(calc(var(--rx,0)*7deg));
+  border-color:rgba(127,230,255,.4);box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.cards .card:hover::after{transform:scaleX(1)}
 
 /* ========================== DEPTH (10/90) ========================== */
 .depth{padding-block:clamp(70px,11vw,150px);color:var(--foam)}
@@ -286,26 +306,54 @@ footer .brand{color:var(--foam)}
 footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
 
 /* ========================= REVEAL ========================= */
-.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-.reveal.in{opacity:1;transform:none}
+.reveal{opacity:0;transform:perspective(900px) translateY(48px) translateZ(-120px) rotateX(12deg);
+  transform-origin:50% 100%;transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:perspective(900px) translateY(0) translateZ(0) rotateX(0deg)}
 .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+/* ============== 傾け操作 CTA（スマホ・iOS）============== */
+#tiltcta{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:55;display:none;
+  align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.05em;
+  padding:10px 18px;border-radius:999px;border:1px solid rgba(127,230,255,.55);
+  background:rgba(4,20,31,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  color:var(--lumen);cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+#tiltcta.show{display:inline-flex;animation:tiltfade .6s var(--ease)}
+@keyframes tiltfade{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 
 /* ===================== REDUCED MOTION ===================== */
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition-duration:.001s!important}
-  .reveal{opacity:1;transform:none}
-  #bubbles{display:none}
+  .reveal{opacity:1;transform:none!important}
+  #bubbles,#snow{display:none}
+  #far,#rays{transform:none!important}
   .draw{stroke-dashoffset:0}
+  /* 静的だが奥行きは残す（反応・回転は止める） */
+  .hero-head{transform:translateZ(40px)!important}
+  .berg{transform:translateZ(22px)!important}
+  .hero-body{transform:translateZ(11px)!important}
+  .card:hover{transform:translateY(-8px)!important}
+  .sub{transform:translateX(calc(-100% - 8px))!important}
+  #tiltcta{display:none!important}
 }
 :focus-visible{outline:2px solid var(--lumen);outline-offset:3px;border-radius:4px}
 </style>
 </head>
 <body>
 
-<!-- 固定背景レイヤー -->
+<!-- 固定背景レイヤー（奥→手前：sea / far / rays / snow / bubbles） -->
 <div id="sea"></div>
+<div id="far" aria-hidden="true">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <g fill="#9fc3d6">
+      <polygon points="120,520 205,455 255,495 305,560 235,650 150,628"/>
+      <polygon points="1040,470 1125,415 1215,505 1185,590 1075,565"/>
+      <polygon points="690,575 760,520 825,565 805,635 715,635"/>
+    </g>
+  </svg>
+</div>
 <div id="rays"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
 <div id="bubbles" aria-hidden="true"></div>
 <div id="progress"></div>
 
@@ -603,6 +651,9 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   </div>
 </footer>
 
+<!-- スマホ用：ジャイロ（傾き）操作の許可ボタン（iOS、一回限り） -->
+<button id="tiltcta" type="button" aria-label="傾けて操作を有効化">📱 傾けて操作</button>
+
 <script>
 (() => {
   "use strict";
@@ -629,6 +680,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     return `rgb(3,16,26)`;
   };
 
+  const root = document.documentElement;
   const sea = document.getElementById('sea');
   const rays = document.getElementById('rays');
   const bubbles = document.getElementById('bubbles');
@@ -637,49 +689,61 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   const gauge = document.querySelector('.gauge');
   const sub = document.getElementById('sub');
   const depthRead = document.getElementById('depthRead');
+  const snow = document.getElementById('snow');
   const MAX_DEPTH = 420;
 
-  let ticking = false;
-  const onScroll = () => {
-    const doc = document.documentElement;
-    const max = doc.scrollHeight - innerHeight;
+  // 共有状態
+  let fieldOpacity = 0;     // マリンスノーの可視度（深いほど濃い）
+  let tpx = 0, tpy = 0;     // ポインタ/ジャイロ目標 (-1..1)
+  let px = 0, py = 0;       // 平滑化後の視点オフセット
+
+  /* ---- スクロール由来の状態を反映（モーション/静止 共通）---- */
+  const applyScroll = () => {
+    const max = root.scrollHeight - innerHeight;
     const p = clamp(max>0 ? scrollY/max : 0, 0, 1);
-
+    root.style.setProperty('--p', p.toFixed(4));
     sea.style.backgroundColor = colorAt(p);
-    rays.style.opacity = clamp(1 - p*2.4, 0, 1).toFixed(3);      // 光は浅いところだけ
-    bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3); // 泡は深いところで
+    rays.style.opacity = clamp(1 - p*2.4, 0, 1).toFixed(3);
+    fieldOpacity = clamp((p-0.12)*1.5, 0, 0.85);
+    bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3);
+    if (snow) snow.style.opacity = fieldOpacity.toFixed(3);
     progress.style.width = (p*100).toFixed(2)+'%';
-
-    // 文字色の反転（水面 → 深海）
     const deep = p > 0.16;
     nav.classList.toggle('deep', deep);
     if (gauge) gauge.classList.toggle('deep', deep);
-
-    // ナビ背景
     nav.classList.toggle('scrolled', scrollY > 40);
-
-    // 深度ゲージ
     const depth = Math.round(p*MAX_DEPTH);
     if (depthRead) depthRead.textContent = depth === 0 ? '0' : '−'+depth;
     if (sub){
       sub.style.top = (p*100).toFixed(1)+'%';
       sub.style.setProperty('--lit', clamp((p-0.12)*1.5, 0, 1).toFixed(3));
     }
-
-    ticking = false;
   };
-  const requestTick = () => { if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } };
-  addEventListener('scroll', requestTick, {passive:true});
-  addEventListener('resize', requestTick, {passive:true});
-  onScroll();
+
+  /* ---- スクロール・リビール（共通）---- */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ========== reduced-motion：モーション無し・状態だけ反映 ========== */
+  if (reduce){
+    let t=false;
+    const upd=()=>{ applyScroll(); t=false; };
+    const onScr=()=>{ if(!t){ t=true; requestAnimationFrame(upd); } };
+    addEventListener('scroll', onScr, {passive:true});
+    addEventListener('resize', onScr, {passive:true});
+    applyScroll();
+    return;
+  }
 
   /* ---- 泡を生成 ---- */
-  if (!reduce){
+  {
     const N = innerWidth < 700 ? 14 : 26;
     for (let i=0;i<N;i++){
       const b = document.createElement('span');
       b.className = 'bubble';
-      const size = 4 + Math.round(((i*37)%10)/10*16); // 4..20px 疑似ランダム
+      const size = 4 + Math.round(((i*37)%10)/10*16);
       const dur = 9 + (i*53)%12;
       b.style.width = b.style.height = size+'px';
       b.style.left = ((i*61)%100)+'%';
@@ -690,22 +754,139 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     }
   }
 
-  /* ---- スクロール・リビール ---- */
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  /* ========== マリンスノー canvas ========== */
+  const ctx = snow ? snow.getContext('2d') : null;
+  let DPR = 1, cw = 0, parts = [], sprites = [];
+  const makeSprite = (coreStop) => {
+    const sz=32, r=sz/2, cv=document.createElement('canvas'); cv.width=cv.height=sz;
+    const c=cv.getContext('2d');
+    const g=c.createRadialGradient(r,r,0,r,r,r);
+    g.addColorStop(0,'rgba(224,242,252,0.95)');
+    g.addColorStop(coreStop,'rgba(190,225,245,0.32)');
+    g.addColorStop(1,'rgba(190,225,245,0)');
+    c.fillStyle=g; c.beginPath(); c.arc(r,r,r,0,Math.PI*2); c.fill();
+    return cv;
+  };
+  const initParts = () => {
+    const count = innerWidth < 700 ? 45 : Math.round(clamp(innerWidth*innerHeight/14000, 70, 150));
+    parts = [];
+    for (let i=0;i<count;i++){
+      const z=Math.random();
+      parts.push({
+        x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
+        r:0.6 + z*z*3.2, vy:0.15 + z*0.7, ph:Math.random()*6.28,
+        a:0.06 + z*0.5, sp: z>0.66?sprites[0] : z>0.33?sprites[1] : sprites[2]
+      });
+    }
+    parts.sort((m,n)=>m.z-n.z); // 遠→近
+  };
+  const resizeCanvas = () => {
+    if (!ctx) return;
+    DPR = Math.min(2, devicePixelRatio||1);
+    snow.width = Math.round(innerWidth*DPR);
+    snow.height = Math.round(innerHeight*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if (innerWidth !== cw){ cw = innerWidth; initParts(); }
+  };
+  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; resizeCanvas(); }
+  const updateSnow = (dts, dy) => {
+    if (!ctx || fieldOpacity<=0.01) return;
+    const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
+    for (let i=0;i<parts.length;i++){
+      const q=parts[i];
+      q.y += q.vy*dts + stream*q.z*0.15;
+      q.x += Math.sin(q.ph += 0.01*dts)*0.25*dts;
+      if (q.y>H+20){ q.y=-20; q.x=Math.random()*W; }
+      else if (q.y<-20){ q.y=H+20; q.x=Math.random()*W; }
+    }
+  };
+  const drawSnow = () => {
+    if (!ctx) return;
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    if (fieldOpacity<=0.01) return;
+    for (let i=0;i<parts.length;i++){
+      const q=parts[i];
+      const ox=px*q.z*24, oy=py*q.z*24, s=q.r*2;
+      ctx.globalAlpha = q.a;
+      ctx.drawImage(q.sp, (q.x+ox)-s, (q.y+oy)-s, s*2, s*2);
+    }
+    ctx.globalAlpha = 1;
+  };
 
-  /* ---- 10/90 バー：表示時にアニメ ---- */
-  const bars = document.getElementById('bars');
-  if (bars){
-    const bio = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting){
-        bars.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.classList.add('visible'), i*180));
-        bio.disconnect();
-      }});
-    }, {threshold:0.4});
-    bio.observe(bars);
+  /* ========== 入力：ポインタ（PC） / ジャイロ（スマホ）========== */
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches){
+    addEventListener('pointermove', (e)=>{
+      tpx = e.clientX/innerWidth*2 - 1;
+      tpy = e.clientY/innerHeight*2 - 1;
+    }, {passive:true});
+  }
+  (function setupGyro(){
+    if (!window.DeviceOrientationEvent) return;
+    let base=null;
+    const handler=(e)=>{
+      if (e.gamma==null || e.beta==null) return;
+      if (base==null) base={g:e.gamma,b:e.beta};
+      tpx = clamp((e.gamma-base.g)/30, -1, 1);
+      tpy = clamp((e.beta -base.b)/30, -1, 1);
+    };
+    const needPerm = typeof DeviceOrientationEvent.requestPermission === 'function';
+    if (!needPerm){ addEventListener('deviceorientation', handler); return; }   // Android 等
+    if (matchMedia('(pointer:fine)').matches) return;                          // デスクトップは不要
+    let saved=null; try{ saved=localStorage.getItem('tilt'); }catch(_){}
+    if (saved==='no') return;
+    if (saved==='yes'){ addEventListener('deviceorientation', handler); return; }
+    const cta=document.getElementById('tiltcta');
+    if (!cta) return;
+    cta.classList.add('show');
+    cta.addEventListener('click', async ()=>{
+      try{
+        const res = await DeviceOrientationEvent.requestPermission();
+        if (res==='granted'){ addEventListener('deviceorientation', handler); try{localStorage.setItem('tilt','yes');}catch(_){} }
+        else { try{localStorage.setItem('tilt','no');}catch(_){} }
+      }catch(_){}
+      cta.classList.remove('show');
+    });
+  })();
+
+  /* ========== 単一アニメーションループ ========== */
+  let scrollDirty=true, lastY=scrollY, dive=0, lastT=performance.now(), rafId=0;
+  applyScroll();
+  addEventListener('scroll', ()=>{ scrollDirty=true; }, {passive:true});
+  addEventListener('resize', ()=>{ scrollDirty=true; resizeCanvas(); }, {passive:true});
+  const tick=(now)=>{
+    const dts = clamp((now-lastT)/16.67, 0, 3); lastT=now;
+    px = lerp(px, tpx, 0.08); py = lerp(py, tpy, 0.08);
+    root.style.setProperty('--px', px.toFixed(4));
+    root.style.setProperty('--py', py.toFixed(4));
+    const dy = scrollY-lastY; lastY=scrollY;
+    dive = lerp(dive, clamp(dy/4, -8, 8), 0.15);
+    if (sub) sub.style.setProperty('--dive', dive.toFixed(2));
+    if (scrollDirty){ applyScroll(); scrollDirty=false; }
+    updateSnow(dts, dy);
+    drawSnow();
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.hidden){ cancelAnimationFrame(rafId); }
+    else { lastT=performance.now(); lastY=scrollY; rafId=requestAnimationFrame(tick); }
+  });
+
+  /* ========== カード 3D チルト（hover対応・PCのみ）========== */
+  if (matchMedia('(hover:hover) and (min-width:760px)').matches){
+    const cardsWrap=document.querySelector('.cards');
+    if (cardsWrap){
+      const rects=new WeakMap(); let stale=false;
+      addEventListener('scroll', ()=>{ stale=true; }, {passive:true});
+      addEventListener('resize', ()=>{ stale=true; }, {passive:true});
+      cardsWrap.addEventListener('pointermove', (e)=>{
+        const c=e.target.closest('.card'); if(!c) return;
+        let r=rects.get(c);
+        if (!r || stale){ r=c.getBoundingClientRect(); rects.set(c,r); stale=false; }
+        c.style.setProperty('--rx', ((e.clientX-r.left)/r.width  - 0.5).toFixed(3));
+        c.style.setProperty('--ry', ((e.clientY-r.top )/r.height - 0.5).toFixed(3));
+      }, {passive:true});
+    }
   }
 })();
 </script>

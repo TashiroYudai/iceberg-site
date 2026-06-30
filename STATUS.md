@@ -29,9 +29,20 @@
 - アニメ：背景の潜水補間 / ゴッドレイ / 上昇する泡 / スクロールリビール /
   見出し下線ワイプ / カード hover / 深度ゲージ。**reduced-motion 対応済み**
 
+## 3D奥行き演出（2026-07-01 追加 / 計画書: ~/.claude/plans/d-replicated-tulip.md）
+依存ゼロのまま「全体的に奥行きのある3D的な動き」を追加（ユーザー選択：CSS3D＋視差＋canvas粒子／マウス＋ジャイロ／ダイナミック）。
+- **背景の視差デプスフィールド**（z-index 再採番：sea -5 / far -4 / rays -3 / snow -2 / bubbles -1）。`#far`＝遠景の氷山シルエット、`#snow`＝canvasのマリンスノー微粒子（z深度でサイズ/alpha/速度/視差・DPR≤2・粒子数 PC≤150/SP45・スプライト drawImage・visibility一時停止）。
+- **視点連動視差**：PCは `pointermove`、スマホは `deviceorientation`（iOSは `#tiltcta`「傾けて操作」タップで `requestPermission`＋localStorage記憶＋フォールバック）。`:root` に `--px/--py/--p` を毎フレーム1回書き、各レイヤーが `calc()` で消費。
+- **単一 rAF ループ**：旧 `onScroll` を `applyScroll()`＋常時 `tick()`＋`scrollDirty` に統合（rAF重複排除）。`--p` でスクロール、`--px/--py` で視点、`--dive` で潜水艦ノーズ傾き（スクロール速度）。
+- **CSS 3D**：`.hero{perspective}`＋`.grid/.hero-copy{preserve-3d}`、`.hero-head/.berg/.hero-body` を層別 `translateZ`＋ポインタ回転（PCは大きめ rotate、SPは並進）。氷山は `--p` で `rotateY/scale`。
+- **3Dリビール**：`.reveal` を「深部から浮上」（`perspective()` 関数＋`translateZ/rotateX`）に。**カードチルト**：`.cards{perspective}`＋`.cards .card:hover` で rotateX/Y（矩形キャッシュ・hover端末のみ）。
+- **重要不変条件**：`body/main/固定レイヤー/.gauge` 祖先に transform/perspective/filter を付けない（fixed含有ブロック維持）。カードは `.reveal` と hover の transform 競合を**特異度**で解決（`.cards .card:hover` 0,3,0 > `.reveal.in` 0,2,0）。
+- **既知の注意**：Safari の backdrop-filter＋3D／iOSジャイロ許可は実機確認推奨。canvasの漂い・視差・チルト・潜水艦傾きは静止スクショ不可。
+
 ## 状態
 - v1 デザイン完成・QA 済み（desktop + mobile、surface + deep の全セクションを
   ヘッドレス Chrome で目視確認、コントラスト/レスポンシブ OK）
+- 3D奥行き演出 実装・静的QA済み（JS構文OK・hero/services/カードチルトを目視確認）。**動き（視差/粒子/チルト/傾き）は実機確認推奨**。
 
 ## 次にやること（差し替え＝3か所、index.html 内に PLACEHOLDER コメントあり）
 1. `<title>` と nav の brand（社名）
