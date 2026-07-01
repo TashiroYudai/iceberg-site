@@ -36,6 +36,11 @@
 - **単一 rAF ループ**：旧 `onScroll` を `applyScroll()`＋常時 `tick()`＋`scrollDirty` に統合（rAF重複排除）。`--p` でスクロール、`--px/--py` で視点、`--dive` で潜水艦ノーズ傾き（スクロール速度）。
 - **CSS 3D**：hero本文のポインタ連動3D傾き（perspective＋層別translateZ＋rotate）は「ペラペラの紙に見える」との指摘で**削除（2026-07-01）**。3Dは `.reveal`（深部から浮上）と `.card` チルトに限定。背景レイヤーのポインタ/ジャイロ視差（#far/#rays/#bubbles）と canvas 粒子は継続。
 - **hero スクロール視差（2026-07-01 追加）**：`--hp`（=`clamp(scrollY/innerHeight,0,1)`、applyScroll で設定）連動の**縦translateYのみ・回転/マウス無し**（＝紙っぽくならない）。PCは左右2カラムなので氷山を大きめに lag（+70px下＋scale）・テキストは上へ、SPは全要素を同方向（上）に控えめ移動して衝突回避。reduced-motion では `.hero-head/.hero-body/.berg{transform:none}`。
+- **追加4演出（2026-07-01・すべて回転なし＝紙にならない方針）**：
+  1) **指/カーソル追従の光** `#glow`（z-1・radial-gradient at `--mx/--my`px・screen合成、tick で lerp 追従。全デバイス pointermove）。
+  2) **氷山コースティクス**：SVG `#bergClip` にクリップした `gCaustic` の光ellipseを `.caustics/.caustics2` で drift（自動・常時、既存の微発光脈動に重畳）。
+  3) **数字カウントアップ**：`.count[data-to][data-suf]` を IntersectionObserver(0.6) で 0→目標（easeOutCubic）。対象＝氷山10%/90%・考え方の statbig 90%。reduced-motion は即最終値。
+  4) **見出しの行ごと登場**：h1 を `.line.l1/.l2` に分割、読込時に `lineup` で順に浮上（reduced-motion は即表示）。
 - **3Dリビール**：`.reveal` を「深部から浮上」（`perspective()` 関数＋`translateZ/rotateX`）に。**カードチルト**：`.cards{perspective}`＋`.cards .card:hover` で rotateX/Y（矩形キャッシュ・hover端末のみ）。
 - **重要不変条件**：`body/main/固定レイヤー/.gauge` 祖先に transform/perspective/filter を付けない（fixed含有ブロック維持）。カードは `.reveal` と hover の transform 競合を**特異度**で解決（`.cards .card:hover` 0,3,0 > `.reveal.in` 0,2,0）。
 - **既知の注意**：Safari の backdrop-filter＋3D／iOSジャイロ許可は実機確認推奨。canvasの漂い・視差・チルト・潜水艦傾きは静止スクショ不可。

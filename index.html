@@ -71,6 +71,10 @@ a{color:inherit;text-decoration:none}
 #bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;will-change:transform,opacity;
   transition:opacity .4s linear;
   transform:translate3d(calc(var(--px,0)*18px), calc(var(--py,0)*12px), 0)}
+/* カーソル/指に付いてくるやわらかい光（水中を照らす・回転なし） */
+#glow{position:fixed;inset:0;z-index:-1;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),
+    rgba(127,230,255,.16), rgba(127,230,255,.05) 40%, transparent 72%)}
 .bubble{position:absolute;bottom:-40px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(180,225,245,.06) 70%);
   border:1px solid rgba(255,255,255,.18);
@@ -181,6 +185,10 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
   background:linear-gradient(90deg,var(--glacier),var(--lumen));opacity:.55;border-radius:2px;
   transform:scaleX(0);transform-origin:left;animation:wipe 1s .6s var(--ease) forwards}
 @keyframes wipe{to{transform:scaleX(1)}}
+/* 見出しの行ごと登場（読込時） */
+.hero h1 .line{display:inline-block;opacity:0;transform:translateY(26px);animation:lineup .9s var(--ease) forwards}
+.hero h1 .l1{animation-delay:.15s}.hero h1 .l2{animation-delay:.35s}
+@keyframes lineup{to{opacity:1;transform:none}}
 .hero .lead{margin-top:22px;font-size:clamp(1rem,1.6vw,1.18rem);max-width:33ch;color:#0c3650}
 .hero .chips{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px}
 .chip{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.04em;padding:8px 14px;border-radius:999px;
@@ -205,6 +213,11 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 @keyframes underpulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
 @keyframes shimmer{0%,100%{opacity:.04}50%{opacity:.14}}
 @keyframes edgepulse{0%,100%{opacity:.28}50%{opacity:.72}}
+/* コースティクス（水の光の漂い） */
+.berg .caustics{transform-box:fill-box;transform-origin:center;animation:caust1 12s ease-in-out infinite}
+.berg .caustics2{animation:caust2 16s ease-in-out infinite;animation-delay:-4s}
+@keyframes caust1{0%,100%{transform:translate(-26px,8px);opacity:.10}50%{transform:translate(34px,-14px);opacity:.26}}
+@keyframes caust2{0%,100%{transform:translate(24px,-6px);opacity:.08}50%{transform:translate(-30px,16px);opacity:.20}}
 .draw{stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 2.4s .3s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 
@@ -327,6 +340,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   #bubbles,#snow{display:none}
   #far,#rays{transform:none!important}
   .hero-head,.hero-body,.berg{transform:none!important}
+  .hero h1 .line{opacity:1!important;transform:none!important}
   .draw{stroke-dashoffset:0}
   .card:hover{transform:translateY(-8px)!important}
   .sub{transform:translateX(calc(-100% - 8px))!important}
@@ -351,6 +365,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
 <div id="rays"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div id="bubbles" aria-hidden="true"></div>
+<div id="glow" aria-hidden="true"></div>
 <div id="progress"></div>
 
 <!-- 深度ゲージ -->
@@ -431,7 +446,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
       <div class="hero-copy">
       <div class="hero-head">
         <span class="eyebrow">00m · 水面</span>
-        <h1 style="margin-top:18px">その課題は、<br><span class="em">氷山の一角。</span></h1>
+        <h1 style="margin-top:18px"><span class="line l1">その課題は、</span><br><span class="em line l2">氷山の一角。</span></h1>
       </div>
       <div class="hero-body">
         <p class="lead">「アプリが欲しい」「サイトを直したい」——そのご相談の多くは、もっと深いところにある本当の課題の入り口です。まず潜って課題の全体をつかみ、最適な手段で解決します。</p>
@@ -459,6 +474,8 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
             <linearGradient id="gSurf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
             <linearGradient id="gRef" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
             <radialGradient id="gUnder" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7fe6ff" stop-opacity=".24"/><stop offset="1" stop-color="#7fe6ff" stop-opacity="0"/></radialGradient>
+            <radialGradient id="gCaustic" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#eafaff" stop-opacity=".9"/><stop offset="1" stop-color="#eafaff" stop-opacity="0"/></radialGradient>
+            <clipPath id="bergClip"><path d="M158 192 L124 250 L110 330 L126 408 L170 480 L220 540 L276 476 L308 392 L320 300 L308 232 L300 192 Z"/></clipPath>
             <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
             <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
           </defs>
@@ -476,6 +493,17 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
             <path d="M158 192 L124 250 L190 320 L214 192 Z" fill="#ffffff" opacity=".08"/>
             <path d="M300 192 L308 232 L320 300 L256 310 L272 192 Z" fill="#ffffff" opacity=".05"/>
             <path d="M190 320 L256 310 L220 392 Z" fill="#ffffff" opacity=".05"/>
+            <!-- コースティクス（水の光が面を流れる・自動／氷山にクリップ） -->
+            <g clip-path="url(#bergClip)" style="mix-blend-mode:screen">
+              <g class="caustics">
+                <ellipse cx="180" cy="300" rx="46" ry="30" fill="url(#gCaustic)"/>
+                <ellipse cx="252" cy="404" rx="40" ry="26" fill="url(#gCaustic)"/>
+              </g>
+              <g class="caustics caustics2">
+                <ellipse cx="220" cy="352" rx="52" ry="24" fill="url(#gCaustic)"/>
+                <ellipse cx="198" cy="470" rx="34" ry="22" fill="url(#gCaustic)"/>
+              </g>
+            </g>
             <!-- 内部の稜線 -->
             <path d="M214 192 L190 320 L220 540 M272 192 L256 310 L220 540 M124 250 L190 320 M320 300 L256 310 M190 320 L256 310 M110 330 L190 320 M308 392 L256 310" fill="none" stroke="#cfeaf6" stroke-width="1" opacity=".18"/>
             <!-- 輪郭＋シアンの発光エッジ（描き込みアニメ） -->
@@ -514,9 +542,9 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
             <line x1="300" y1="150" x2="338" y2="118" stroke="#0c3a57" stroke-width="1" opacity=".4"/>
             <circle cx="300" cy="150" r="2.4" fill="#0c3a57" opacity=".6"/>
             <text class="lbl" x="338" y="114">見えている課題</text>
-            <text class="lbl pct" x="338" y="139" style="font-size:20px">10%</text>
+            <text class="lbl pct count" data-to="10" data-suf="%" x="338" y="139" style="font-size:20px">10%</text>
             <text class="lbl b" x="34" y="360" style="fill:#0c3a57">水面下の課題</text>
-            <text class="lbl pct" x="34" y="396" style="font-size:34px;fill:#0c3a57">90%</text>
+            <text class="lbl pct count" data-to="90" data-suf="%" x="34" y="396" style="font-size:34px;fill:#0c3a57">90%</text>
           </g>
         </svg>
       </div>
@@ -586,7 +614,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   <section class="depth" id="depth">
     <div class="wrap split">
       <div class="reveal">
-        <div class="statbig">90<small>%</small></div>
+        <div class="statbig"><span class="count" data-to="90">90</span><small>%</small></div>
       </div>
       <div class="reveal d1">
         <span class="eyebrow">−180m · 課題の深さ</span>
@@ -692,6 +720,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   let fieldOpacity = 0;     // マリンスノーの可視度（深いほど濃い）
   let tpx = 0, tpy = 0;     // ポインタ/ジャイロ目標 (-1..1)
   let px = 0, py = 0;       // 平滑化後の視点オフセット
+  let tmx = innerWidth/2, tmy = innerHeight/2, mx = tmx, my = tmy; // 追従する光の位置(px)
 
   /* ---- スクロール由来の状態を反映（モーション/静止 共通）---- */
   const applyScroll = () => {
@@ -722,6 +751,20 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---- 数字カウントアップ（見えたら 0→目標。共通）---- */
+  const countUp = (el)=>{
+    const to=+el.dataset.to, suf=el.dataset.suf||''; let s=null;
+    const step=(t)=>{ if(s==null)s=t; const k=clamp((t-s)/1200,0,1); const e=1-Math.pow(1-k,3);
+      el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  const counters=document.querySelectorAll('.count');
+  if (reduce){ counters.forEach(el=>{ el.textContent=(+el.dataset.to)+(el.dataset.suf||''); }); }
+  else {
+    const cio=new IntersectionObserver((ents)=>{ ents.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); cio.unobserve(e.target); } }); }, {threshold:0.6});
+    counters.forEach(el=>cio.observe(el));
+  }
 
   /* ========== reduced-motion：モーション無し・状態だけ反映 ========== */
   if (reduce){
@@ -817,6 +860,8 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
       tpy = e.clientY/innerHeight*2 - 1;
     }, {passive:true});
   }
+  // 光は全デバイスで指/カーソルに追従（回転なし＝紙にならない）
+  addEventListener('pointermove', (e)=>{ tmx=e.clientX; tmy=e.clientY; }, {passive:true});
   (function setupGyro(){
     if (!window.DeviceOrientationEvent) return;
     let base=null;
@@ -855,6 +900,9 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     px = lerp(px, tpx, 0.08); py = lerp(py, tpy, 0.08);
     root.style.setProperty('--px', px.toFixed(4));
     root.style.setProperty('--py', py.toFixed(4));
+    mx = lerp(mx, tmx, 0.12); my = lerp(my, tmy, 0.12);   // 追従する光
+    root.style.setProperty('--mx', mx.toFixed(1)+'px');
+    root.style.setProperty('--my', my.toFixed(1)+'px');
     const dy = scrollY-lastY; lastY=scrollY;
     dive = lerp(dive, clamp(dy/4, -8, 8), 0.15);
     if (sub) sub.style.setProperty('--dive', dive.toFixed(2));
