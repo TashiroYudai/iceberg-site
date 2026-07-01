@@ -159,9 +159,17 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 .hero-copy{display:contents}
 .hero-head{order:1}.berg{order:2}.hero-body{order:3}
 .hero .grid>*,.hero-head,.hero-body{min-width:0}
+/* スクロール視差（縦方向のみ・回転/マウス無し＝紙っぽくならない。--hp=ヒーロー内スクロール進捗0..1） */
+.hero-head{transform:translateY(calc(var(--hp,0) * -22px))}
+.hero-body{transform:translateY(calc(var(--hp,0) * -14px))}
+.berg{transform:translateY(calc(var(--hp,0) * -6px)) scale(calc(1 - var(--hp,0) * 0.04))}
 @media(min-width:940px){
   .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;column-gap:clamp(28px,5vw,56px);align-items:center}
   .hero-copy{display:block}
+  /* PCは左右2カラムなので氷山を大きめに視差（縦の衝突なし） */
+  .hero-head{transform:translateY(calc(var(--hp,0) * -40px))}
+  .hero-body{transform:translateY(calc(var(--hp,0) * -20px))}
+  .berg{transform:translateY(calc(var(--hp,0) * 70px)) scale(calc(1 - var(--hp,0) * 0.06))}
 }
 @media(max-width:939px){
   .hero{align-items:start;padding-top:66px;padding-bottom:30px}
@@ -318,6 +326,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   .reveal{opacity:1;transform:none!important}
   #bubbles,#snow{display:none}
   #far,#rays{transform:none!important}
+  .hero-head,.hero-body,.berg{transform:none!important}
   .draw{stroke-dashoffset:0}
   .card:hover{transform:translateY(-8px)!important}
   .sub{transform:translateX(calc(-100% - 8px))!important}
@@ -689,6 +698,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     const max = root.scrollHeight - innerHeight;
     const p = clamp(max>0 ? scrollY/max : 0, 0, 1);
     root.style.setProperty('--p', p.toFixed(4));
+    root.style.setProperty('--hp', clamp(scrollY/innerHeight, 0, 1).toFixed(4)); // ヒーロー内スクロール進捗（視差用）
     sea.style.backgroundColor = colorAt(p);
     rays.style.opacity = clamp(1 - p*2.4, 0, 1).toFixed(3);
     fieldOpacity = clamp((p-0.12)*1.5, 0, 0.85);
