@@ -52,6 +52,9 @@
 - **`#far`（遠景の氷山）は削除（2026-07-01）**：暗い深部で平たい三角形に見えて浮くとの指摘。奥行きは snow/生物発光/視差/glow で十分なため除去（HTML要素・CSS・reduce参照とも削除）。再追加するなら「深部でフェードアウトする soft グラデ silhouette」推奨。
 - 静的QA：JS構文OK、hero/footer/OGP を目視確認。動き（追従光/泡/発光/ping）は実機確認推奨。
 
+## モバイル第一画面の調整（2026-07-01）
+スマホの初回表示で説明文(lead)が中途半端に覗く問題を修正。第一画面＝**ロゴ＋見出し「その課題は、氷山の一角。」＋氷山イラストのみ**にした。`@media(max-width:939px)` で `.berg svg{height:50svh}`（氷山を主役に大きく）、`.hero .grid{gap:clamp(20px,5vw,30px)}`（見出し⇄氷山を広く）、`.hero-body{margin-top:17svh}`（説明文を第一画面の外＝下へ送る）。700〜860px 高で「見出し＋氷山フル表示・leadはfold外」を確認。DOM制約（desktopは head+body|berg の2カラム、mobileは head|berg|body 順）で head+berg を1つの100svh枠に厳密グループ化はできないため、svhマージンで対応。
+
 ## 状態
 - v1 デザイン完成・QA 済み（desktop + mobile、surface + deep の全セクションを
   ヘッドレス Chrome で目視確認、コントラスト/レスポンシブ OK）
