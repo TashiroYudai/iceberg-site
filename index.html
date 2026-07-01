@@ -205,10 +205,11 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
   .berg{transform:translateY(calc(var(--hp,0) * 70px)) scale(calc(1 - var(--hp,0) * 0.06))}
 }
 @media(max-width:939px){
-  .hero{align-items:start;padding-top:70px;padding-bottom:30px}
-  .hero .grid{gap:clamp(20px,5vw,30px)}            /* 見出し⇄氷山の間を少し広く */
-  .berg svg{height:50svh;width:auto;max-width:100%;margin-inline:auto}
-  .hero-body{margin-top:17svh}                      /* 説明文を第一画面の外（下）へ送る */
+  .hero{align-items:start;padding-top:70px;padding-bottom:28px}
+  /* 氷山ブロックを「現在のビューポート高(dvh)−ヘッダー分」まで広げ、説明文を必ず第一画面の外へ。
+     dvh を使うことで iOS Safari のツールバー表示/非表示（svh と lvh の差）に追従する。 */
+  .berg{min-height:calc(100dvh - 160px);display:flex;align-items:center;justify-content:center}
+  .berg svg{height:52dvh;width:auto;max-width:100%;margin-inline:auto}
 }
 .hero h1{font-size:clamp(2.4rem,6vw,4.5rem);color:var(--ink)}
 .hero h1 .em{position:relative;white-space:nowrap}
