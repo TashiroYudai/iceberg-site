@@ -11,6 +11,27 @@
 <!-- ============================================================= -->
 <title>Fathom Systems — 見えない課題まで潜って、解決する。</title>
 <meta name="description" content="その課題は、氷山の一角かもしれません。私たちは水面下に潜って本当の課題を突き止め、スマホアプリ・ホームページ・社内システムという手段で解決します。" />
+<link rel="canonical" href="https://tashiroyudai.github.io/iceberg-site/" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#082333" />
+<!-- OGP / Twitter（SNS・LINE共有時のサムネ／※独自ドメイン化したら URL を差し替え） -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Fathom Systems" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:title" content="Fathom Systems — 見えない課題まで潜って、解決する。" />
+<meta property="og:description" content="その課題は、氷山の一角かもしれません。水面下に潜って本当の課題を突き止め、スマホアプリ・ホームページ・社内システムで解決します。" />
+<meta property="og:url" content="https://tashiroyudai.github.io/iceberg-site/" />
+<meta property="og:image" content="https://tashiroyudai.github.io/iceberg-site/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Fathom Systems — 見えない課題まで潜って、解決する。" />
+<meta name="twitter:description" content="その課題は、氷山の一角かもしれません。水面下に潜って本当の課題を突き止め、アプリ・HP・社内システムで解決します。" />
+<meta name="twitter:image" content="https://tashiroyudai.github.io/iceberg-site/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Fathom Systems","alternateName":"株式会社ファゾムシステムズ","url":"https://tashiroyudai.github.io/iceberg-site/","logo":"https://tashiroyudai.github.io/iceberg-site/apple-touch-icon.png","description":"スマホアプリ開発・ホームページ制作・社内システム開発。見えない課題まで潜って解決するソフトウェアスタジオ。","knowsAbout":["スマホアプリ開発","ホームページ制作","社内システム開発"]}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -54,7 +75,7 @@ a{color:inherit;text-decoration:none}
 /* ===================== 固定の海（背景レイヤー：奥→手前）===================== */
 #sea{position:fixed;inset:0;z-index:-5;background:var(--sky);transition:background-color .15s linear}
 /* 遠景の氷山シルエット（最も遅い視差） */
-#far{position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.3;filter:blur(4px);will-change:transform;
+#far{position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.2;filter:blur(2px);will-change:transform;
   transform:translate3d(calc(var(--px,0)*-8px), calc(var(--py,0)*-6px + var(--p,0)*36px), 0) scale(1.06)}
 #far svg{width:100%;height:100%}
 /* 上部の光（ゴッドレイ）— 深くなると消える */
@@ -75,6 +96,12 @@ a{color:inherit;text-decoration:none}
 #glow{position:fixed;inset:0;z-index:-1;pointer-events:none;mix-blend-mode:screen;
   background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),
     rgba(127,230,255,.16), rgba(127,230,255,.05) 40%, transparent 72%)}
+/* カーソル/指から立ちのぼる泡 */
+.cbub{position:fixed;z-index:44;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.55),rgba(180,225,245,.04) 70%);
+  border:1px solid rgba(255,255,255,.22);animation:cbub 1.3s ease-out forwards}
+@keyframes cbub{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}18%{opacity:.7}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,0)),calc(-50% - 64px)) scale(1)}}
 .bubble{position:absolute;bottom:-40px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(180,225,245,.06) 70%);
   border:1px solid rgba(255,255,255,.18);
@@ -132,6 +159,12 @@ a{color:inherit;text-decoration:none}
 .sub .port{fill:#7fe6ff;fill:var(--lightcol);opacity:calc(.3 + var(--lit,0)*.7)}
 .sub .bow{fill:#eaffff;fill:color-mix(in srgb, #eaffff, #fff0a0 calc(var(--lit,0) * 100%));opacity:calc(.45 + var(--lit,0)*.55)}
 .sub .halo{fill:#7fe6ff;fill:var(--lightcol);opacity:calc(var(--lit,0)*.4)}
+/* ソナー・ピング（潜水艦から広がる輪） */
+.sub .ping{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;
+  border:1.5px solid var(--lightcol,#7fe6ff);transform:translate(-50%,-50%);opacity:0;
+  animation:sonar 5.5s ease-out infinite 2s}
+@keyframes sonar{0%{opacity:.5;transform:translate(-50%,-50%) scale(.3)}70%{opacity:0}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(6)}}
 .sub .bub{opacity:0;animation:subbub 2.4s ease-in-out infinite}
 .sub .bub.b2{animation-delay:.8s}.sub .bub.b3{animation-delay:1.5s}
 @keyframes subbub{0%{transform:translate(0,0);opacity:0}25%{opacity:.7}100%{transform:translate(13px,-5px);opacity:0}}
@@ -316,6 +349,12 @@ footer{position:relative;z-index:1;padding:48px clamp(20px,6vw,40px) 56px;color:
 footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
 footer .brand{color:var(--foam)}
 footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+footer .f-brand{display:flex;flex-direction:column;gap:6px}
+footer .f-tag{color:var(--foam-dim);font-size:.86rem}
+footer .f-nav{display:flex;flex-wrap:wrap;gap:10px 24px}
+footer .f-nav a{font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.04em;color:var(--foam-dim)}
+footer .f-nav a:hover{color:var(--lumen)}
+footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)}
 
 /* ========================= REVEAL ========================= */
 .reveal{opacity:0;transform:perspective(900px) translateY(48px) translateZ(-120px) rotateX(12deg);
@@ -355,10 +394,11 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
 <div id="sea"></div>
 <div id="far" aria-hidden="true">
   <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-    <g fill="#9fc3d6">
-      <polygon points="120,520 205,455 255,495 305,560 235,650 150,628"/>
-      <polygon points="1040,470 1125,415 1215,505 1185,590 1075,565"/>
-      <polygon points="690,575 760,520 825,565 805,635 715,635"/>
+    <g fill="#8fbdd6">
+      <polygon points="70,560 175,430 220,478 262,560"/>
+      <polygon points="1050,540 1140,420 1188,472 1250,540"/>
+      <polygon points="600,585 700,470 744,508 820,585"/>
+      <polygon points="360,600 424,522 468,560 512,600"/>
     </g>
   </svg>
 </div>
@@ -416,6 +456,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
         <circle class="halo" cx="22" cy="34" r="8.5"/>
         <circle class="bow" cx="22" cy="34" r="3.8"/>
       </svg>
+      <span class="ping"></span>
     </div>
   </div>
 </aside>
@@ -669,9 +710,21 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
 
 <footer>
   <div class="wrap">
+    <div class="f-brand">
+      <span class="brand">Fathom Systems</span>
+      <p class="f-tag">見えない課題まで潜って、解決する。</p>
+    </div>
+    <nav class="f-nav" aria-label="フッターナビ">
+      <a href="#services">サービス</a>
+      <a href="#depth">考え方</a>
+      <a href="#approach">進め方</a>
+      <a href="#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="wrap f-base">
     <!-- PLACEHOLDER: 社名・年 -->
-    <span class="brand">Fathom Systems</span>
-    <span class="seabed">−420m · SEABED — © 2026 Fathom Systems Inc.（仮）</span>
+    <span class="seabed">−420m · SEABED</span>
+    <span class="seabed">© 2026 Fathom Systems Inc.（仮）</span>
   </div>
 </footer>
 
@@ -796,14 +849,15 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
 
   /* ========== マリンスノー canvas ========== */
   const ctx = snow ? snow.getContext('2d') : null;
-  let DPR = 1, cw = 0, parts = [], sprites = [];
-  const makeSprite = (coreStop) => {
+  let DPR = 1, cw = 0, parts = [], sprites = [], spriteGlow = null;
+  const makeSprite = (coreStop, rgb) => {
+    const c0 = rgb ? `rgba(${rgb},0.95)` : 'rgba(224,242,252,0.95)';
+    const c1 = rgb ? `rgba(${rgb},0.4)`  : 'rgba(190,225,245,0.32)';
+    const c2 = rgb ? `rgba(${rgb},0)`    : 'rgba(190,225,245,0)';
     const sz=32, r=sz/2, cv=document.createElement('canvas'); cv.width=cv.height=sz;
     const c=cv.getContext('2d');
     const g=c.createRadialGradient(r,r,0,r,r,r);
-    g.addColorStop(0,'rgba(224,242,252,0.95)');
-    g.addColorStop(coreStop,'rgba(190,225,245,0.32)');
-    g.addColorStop(1,'rgba(190,225,245,0)');
+    g.addColorStop(0,c0); g.addColorStop(coreStop,c1); g.addColorStop(1,c2);
     c.fillStyle=g; c.beginPath(); c.arc(r,r,r,0,Math.PI*2); c.fill();
     return cv;
   };
@@ -818,6 +872,13 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
         a:0.06 + z*0.5, sp: z>0.66?sprites[0] : z>0.33?sprites[1] : sprites[2]
       });
     }
+    // 深海の生物発光（深いほど見える・ゆっくり脈動）
+    const gc = innerWidth<700 ? 6 : 12;
+    for (let i=0;i<gc;i++){
+      parts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z:0.5+Math.random()*0.5,
+        r:1.4+Math.random()*2.2, vy:0.08+Math.random()*0.22, ph:Math.random()*6.28,
+        a:0.5, glow:true, pulse:Math.random()*6.28, pa:1 });
+    }
     parts.sort((m,n)=>m.z-n.z); // 遠→近
   };
   const resizeCanvas = () => {
@@ -828,7 +889,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     ctx.setTransform(DPR,0,0,DPR,0,0);
     if (innerWidth !== cw){ cw = innerWidth; initParts(); }
   };
-  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; resizeCanvas(); }
+  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; spriteGlow=makeSprite(0.35,'127,230,255'); resizeCanvas(); }
   const updateSnow = (dts, dy) => {
     if (!ctx || fieldOpacity<=0.01) return;
     const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
@@ -836,6 +897,7 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
       const q=parts[i];
       q.y += q.vy*dts + stream*q.z*0.15;
       q.x += Math.sin(q.ph += 0.01*dts)*0.25*dts;
+      if (q.glow){ q.pulse += 0.03*dts; q.pa = 0.35 + 0.65*(0.5+0.5*Math.sin(q.pulse)); }
       if (q.y>H+20){ q.y=-20; q.x=Math.random()*W; }
       else if (q.y<-20){ q.y=H+20; q.x=Math.random()*W; }
     }
@@ -846,9 +908,11 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
     if (fieldOpacity<=0.01) return;
     for (let i=0;i<parts.length;i++){
       const q=parts[i];
-      const ox=px*q.z*24, oy=py*q.z*24, s=q.r*2;
-      ctx.globalAlpha = q.a;
-      ctx.drawImage(q.sp, (q.x+ox)-s, (q.y+oy)-s, s*2, s*2);
+      const ox=px*q.z*24, oy=py*q.z*24;
+      const sp = q.glow ? spriteGlow : q.sp;
+      const s = q.glow ? q.r*3 : q.r*2;
+      ctx.globalAlpha = q.glow ? q.a*q.pa : q.a;
+      ctx.drawImage(sp, (q.x+ox)-s, (q.y+oy)-s, s*2, s*2);
     }
     ctx.globalAlpha = 1;
   };
@@ -860,8 +924,22 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
       tpy = e.clientY/innerHeight*2 - 1;
     }, {passive:true});
   }
-  // 光は全デバイスで指/カーソルに追従（回転なし＝紙にならない）
-  addEventListener('pointermove', (e)=>{ tmx=e.clientX; tmy=e.clientY; }, {passive:true});
+  // 光は全デバイスで指/カーソルに追従（回転なし）＋泡を放出
+  let lastBub=0;
+  addEventListener('pointermove', (e)=>{
+    tmx=e.clientX; tmy=e.clientY;
+    const now=performance.now();
+    if (now-lastBub>90){
+      lastBub=now;
+      const b=document.createElement('span'); b.className='cbub';
+      const s=4+Math.random()*7;
+      b.style.left=e.clientX+'px'; b.style.top=e.clientY+'px';
+      b.style.width=b.style.height=s+'px';
+      b.style.setProperty('--dx',((Math.random()*2-1)*20).toFixed(0)+'px');
+      document.body.appendChild(b);
+      b.addEventListener('animationend',()=>b.remove());
+    }
+  }, {passive:true});
   (function setupGyro(){
     if (!window.DeviceOrientationEvent) return;
     let base=null;

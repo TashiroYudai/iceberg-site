@@ -45,6 +45,12 @@
 - **重要不変条件**：`body/main/固定レイヤー/.gauge` 祖先に transform/perspective/filter を付けない（fixed含有ブロック維持）。カードは `.reveal` と hover の transform 競合を**特異度**で解決（`.cards .card:hover` 0,3,0 > `.reveal.in` 0,2,0）。
 - **既知の注意**：Safari の backdrop-filter＋3D／iOSジャイロ許可は実機確認推奨。canvasの漂い・視差・チルト・潜水艦傾きは静止スクショ不可。
 
+## 共有対策・追加演出・仕上げ（2026-07-01）
+- **共有/SEO**：`head` に OGP/Twitter カード・`theme-color`・`canonical`・JSON-LD(Organization) を追加。アセットをリポジトリに同梱：`og.png`(1200×630, テンプレ=scratchpad/og-tpl.html を headless で書き出し)・`favicon.svg`・`apple-touch-icon.png`(180)。**注意：OGP/canonical の URL は github.io 直書き。独自ドメイン化したら差し替え要**。
+- **追加演出（回転なし方針）**：`#glow`＝カーソル/指追従の光（`--mx/--my`）／`.cbub`＝pointermove で泡を放出（throttle 90ms・animationend で除去）／canvas に**深海の生物発光**（`spriteGlow`＋`glow:true` 粒子・`pulse` 脈動・fieldOpacity で深部のみ）／`.sub .ping`＝ソナー輪（`--lightcol` 色・5.5s）。
+- **仕上げ**：`#far` を遠景の氷山の峰に作り直し（opacity .2 / blur 2px）／フッター拡充（ブランド＋タグライン＋`.f-nav`＋著作権2段）。
+- 静的QA：JS構文OK、hero/footer/OGP を目視確認。動き（追従光/泡/発光/ping）は実機確認推奨。
+
 ## 状態
 - v1 デザイン完成・QA 済み（desktop + mobile、surface + deep の全セクションを
   ヘッドレス Chrome で目視確認、コントラスト/レスポンシブ OK）
