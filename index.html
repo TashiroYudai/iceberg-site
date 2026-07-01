@@ -154,23 +154,14 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:18px}
 
 /* ============================ HERO ============================ */
-.hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink);
-  perspective:1200px;perspective-origin:50% 42%}
-.hero .grid{display:flex;flex-direction:column;gap:clamp(16px,4vw,26px);transform-style:preserve-3d}
+.hero{min-height:100svh;display:grid;align-items:center;padding-top:96px;padding-bottom:60px;color:var(--ink)}
+.hero .grid{display:flex;flex-direction:column;gap:clamp(16px,4vw,26px)}
 .hero-copy{display:contents}
 .hero-head{order:1}.berg{order:2}.hero-body{order:3}
 .hero .grid>*,.hero-head,.hero-body{min-width:0}
-/* hero 3D 層（手前ほど translateZ 大／ポインタ・ジャイロで視差） */
-.hero-head{transform:translate3d(calc(var(--px,0)*7px), calc(var(--py,0)*7px), 48px)}
-.berg{transform:translate3d(calc(var(--px,0)*-5px), calc(var(--py,0)*-4px), 26px) rotateY(calc(var(--p,0)*8deg)) scale(calc(1 - var(--p,0)*0.05))}
-.hero-body{transform:translate3d(calc(var(--px,0)*4px), calc(var(--py,0)*4px), 14px)}
 @media(min-width:940px){
   .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;column-gap:clamp(28px,5vw,56px);align-items:center}
-  .hero-copy{display:block;transform-style:preserve-3d}
-  /* デスクトップは回転で奥行きを強める */
-  .hero-head{transform:translateZ(56px) rotateX(calc(var(--py,0)*3.5deg)) rotateY(calc(var(--px,0)*5deg))}
-  .berg{transform:translateZ(30px) rotateY(calc(var(--px,0)*7deg + var(--p,0)*8deg)) rotateX(calc(var(--py,0)*-4deg)) scale(calc(1 - var(--p,0)*0.05))}
-  .hero-body{transform:translateZ(16px) rotateY(calc(var(--px,0)*2.5deg))}
+  .hero-copy{display:block}
 }
 @media(max-width:939px){
   .hero{align-items:start;padding-top:66px;padding-bottom:30px}
@@ -328,10 +319,6 @@ footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
   #bubbles,#snow{display:none}
   #far,#rays{transform:none!important}
   .draw{stroke-dashoffset:0}
-  /* 静的だが奥行きは残す（反応・回転は止める） */
-  .hero-head{transform:translateZ(40px)!important}
-  .berg{transform:translateZ(22px)!important}
-  .hero-body{transform:translateZ(11px)!important}
   .card:hover{transform:translateY(-8px)!important}
   .sub{transform:translateX(calc(-100% - 8px))!important}
   #tiltcta{display:none!important}
