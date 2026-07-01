@@ -133,11 +133,11 @@ a{color:inherit;text-decoration:none}
 @media(min-width:860px){.nav-links a.lnk{display:inline}}
 
 /* ====================== 深度ゲージ（固定）====================== */
-.gauge{position:fixed;right:clamp(14px,3vw,38px);top:50%;transform:translateY(-50%);z-index:45;
+.gauge{position:fixed;right:clamp(14px,3vw,38px);top:48vh;z-index:45;
   display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;
   font-family:"IBM Plex Mono",monospace;color:var(--ink);transition:color .5s linear,opacity .4s}
 .nav.deep ~ .gauge,.gauge.deep{color:var(--foam)}
-.gauge .track{position:relative;width:2px;height:56vh;background:linear-gradient(var(--ink),transparent);opacity:.35}
+.gauge .track{position:relative;width:2px;height:42vh;background:linear-gradient(var(--ink),transparent);opacity:.35}
 .gauge.deep .track{background:linear-gradient(rgba(233,246,253,.5),rgba(233,246,253,.05))}
 .gauge .tick{position:absolute;left:50%;transform:translateX(-50%);width:9px;height:1px;background:currentColor;opacity:.5}
 /* 潜水艦（深度ゲージのレールを降りていく） */
@@ -167,9 +167,9 @@ a{color:inherit;text-decoration:none}
 .gauge .read{font-size:.82rem;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .gauge .read small{display:block;font-size:.56rem;letter-spacing:.22em;opacity:.6;font-weight:500;text-align:center}
 @media(max-width:760px){
-  .gauge{right:12px}
+  .gauge{right:12px;top:54vh}
   .gauge .read,.gauge .tick{display:none}
-  .gauge .track{height:46vh}
+  .gauge .track{height:40vh}
   .sub{width:62px}
 }
 
@@ -208,10 +208,10 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
   .hero{align-items:start;padding-top:70px;padding-bottom:28px}
   /* 氷山ブロックを「現在のビューポート高(dvh)−ヘッダー分」まで広げ、説明文を必ず第一画面の外へ。
      dvh を使うことで iOS Safari のツールバー表示/非表示（svh と lvh の差）に追従する。 */
-  .berg{min-height:calc(100dvh - 160px);display:flex;align-items:center;justify-content:center}
+  .berg{min-height:calc(100dvh - 190px);display:flex;align-items:flex-start;justify-content:center;padding-top:2vh}
   .berg svg{height:52dvh;width:auto;max-width:100%;margin-inline:auto}
 }
-.hero h1{font-size:clamp(2.4rem,6vw,4.5rem);color:var(--ink)}
+.hero h1{font-size:clamp(2.4rem,6vw,4.5rem);color:var(--ink);line-height:1.4}
 .hero h1 .em{position:relative;white-space:nowrap}
 .hero h1 .em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.14em;
   background:linear-gradient(90deg,var(--glacier),var(--lumen));opacity:.55;border-radius:2px;
