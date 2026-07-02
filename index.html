@@ -161,7 +161,7 @@ a{color:inherit;text-decoration:none}
 .sub .bub{opacity:0;animation:subbub 2.8s ease-in-out infinite}
 .sub .bub.b2{animation-delay:.5s}.sub .bub.b3{animation-delay:1.1s}
 .sub .bub.b4{animation-delay:1.6s}.sub .bub.b5{animation-delay:2.2s}
-@keyframes subbub{0%{transform:translate(0,0);opacity:0}20%{opacity:.85}100%{transform:translate(9px,-28px);opacity:0}}
+@keyframes subbub{0%{transform:translate(0,0);opacity:0}20%{opacity:.85}100%{transform:translate(-2px,-30px);opacity:0}}
 .gauge .read{font-size:.82rem;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .gauge .read small{display:block;font-size:.56rem;letter-spacing:.22em;opacity:.6;font-weight:500;text-align:center}
 @media(max-width:760px){
@@ -415,12 +415,12 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
         </defs>
         <!-- サーチライト（前方＝左） -->
         <polygon class="beam" points="22,28 22,40 -26,54 -26,14" fill="url(#subBeam)" style="mix-blend-mode:screen"/>
-        <!-- 気泡（スクリュー後方＝航跡から立ちのぼる） -->
-        <circle class="bub b1" cx="116" cy="34" r="1.9" fill="#cdeef8"/>
-        <circle class="bub b2" cx="119" cy="31" r="1.4" fill="#cdeef8"/>
-        <circle class="bub b3" cx="117" cy="37" r="1.6" fill="#cdeef8"/>
-        <circle class="bub b4" cx="120" cy="34" r="1.2" fill="#cdeef8"/>
-        <circle class="bub b5" cx="118" cy="30" r="1.3" fill="#cdeef8"/>
+        <!-- 気泡（中央＝司令塔あたりから立ちのぼる） -->
+        <circle class="bub b1" cx="62" cy="17" r="1.9" fill="#cdeef8"/>
+        <circle class="bub b2" cx="70" cy="15" r="1.4" fill="#cdeef8"/>
+        <circle class="bub b3" cx="56" cy="16" r="1.6" fill="#cdeef8"/>
+        <circle class="bub b4" cx="74" cy="17" r="1.2" fill="#cdeef8"/>
+        <circle class="bub b5" cx="66" cy="13" r="1.3" fill="#cdeef8"/>
         <!-- スクリュー（後方＝右） -->
         <rect x="104" y="33" width="9" height="2" rx="1" fill="#8fb1c2"/>
         <g class="prop">
