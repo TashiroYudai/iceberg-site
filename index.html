@@ -253,26 +253,15 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 @keyframes dive{0%{opacity:0;top:7px}30%{opacity:1}100%{opacity:0;top:22px}}
 
 /* ========================= WATERLINE ========================= */
-.waterline{position:relative;min-height:50svh;display:grid;place-items:center;text-align:center;color:var(--foam);overflow:hidden}
-.waterline .surface{position:absolute;left:-5%;right:-5%;top:0;height:120px;
-  background:linear-gradient(180deg,rgba(255,255,255,.35),transparent);
-  filter:blur(2px);opacity:.6}
-.waterline .surface::before{content:"";position:absolute;inset:0;
-  background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.25) 22px 24px);
-  -webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent);
-  animation:caustic 6s linear infinite}
-@keyframes caustic{to{transform:translateX(-24px)}}
+.waterline{position:relative;display:grid;place-items:center;text-align:center;color:var(--foam);padding-top:clamp(44px,8vh,92px);padding-bottom:clamp(18px,3vh,36px);overflow:hidden}
+.waterline + .services{padding-top:clamp(40px,6vw,72px)}
 .waterline .big{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;
   font-size:clamp(1.8rem,5.2vw,3.6rem);line-height:1.3;max-width:18ch;margin-inline:auto}
 .waterline .big b{color:var(--lumen);text-shadow:0 0 30px rgba(127,230,255,.45)}
 .waterline .wnote{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.2em;color:var(--foam-dim)}
-.waterline .descent{margin:40px auto 0;width:1.5px;height:82px;position:relative;border-radius:2px;
-  background:linear-gradient(180deg,transparent,rgba(233,246,253,.5) 18%,rgba(233,246,253,.5) 82%,transparent)}
-.waterline .descent .dot{position:absolute;left:50%;top:34px;width:6px;height:6px;margin-left:-3px;border-radius:50%;
-  background:#fff;box-shadow:0 0 10px rgba(127,230,255,.95),0 0 4px rgba(255,255,255,.9);opacity:.95;animation:sink 2.8s var(--ease) infinite}
-.waterline .descent::after{content:"深部へ";position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);
-  font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.18em;color:var(--foam);opacity:.7;white-space:nowrap}
-@keyframes sink{0%{top:-4px;opacity:0}18%{opacity:1}82%{opacity:1}100%{top:82px;opacity:0}}
+/* コンパクト：水面ラインの帯＋見出しだけ（余白を詰める） */
+.waterline .wl-line{width:min(72vw,360px);height:1px;margin:0 auto clamp(26px,4vh,44px);
+  background:linear-gradient(90deg,transparent,rgba(233,246,253,.6),transparent)}
 
 /* ========================= SERVICES ========================= */
 .services{padding-block:clamp(70px,11vw,140px);color:var(--foam)}
@@ -584,11 +573,10 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 
   <!-- ===================== 水面を越える ===================== -->
   <section class="waterline" aria-label="水面下へ">
-    <div class="surface" aria-hidden="true"></div>
     <div class="wrap reveal">
+      <div class="wl-line" aria-hidden="true"></div>
       <p class="big">水面下に、<br>本当の<b>課題</b>がある。</p>
       <p class="wnote">— 調べるほど、本当の原因が見えてくる —</p>
-      <div class="descent" aria-hidden="true"><span class="dot"></span></div>
     </div>
   </section>
 
