@@ -79,6 +79,8 @@ a{color:inherit;text-decoration:none}
 @keyframes rayDrift{from{background-position:0% 0%}to{background-position:30% 12%}}
 /* マリンスノー（中景の微粒子・canvas） */
 #snow{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:0;transition:opacity .5s linear}
+/* 漂う氷塊（半透明の青白い氷片・canvas。浅いほど多く・深いほど少なく暗く） */
+#ice{position:fixed;inset:0;z-index:-2;pointer-events:none}
 /* 泡（最前の背景・手前ほど視差大） */
 #bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;will-change:transform,opacity;
   transition:opacity .4s linear;
@@ -354,7 +356,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition-duration:.001s!important}
   .reveal{opacity:1;transform:none!important}
-  #bubbles,#snow{display:none}
+  #bubbles,#snow,#ice{display:none}
   #rays{transform:none!important}
   .hero-head,.hero-body,.berg{transform:none!important}
   .hero h1 .line{opacity:1!important;transform:none!important}
@@ -367,9 +369,10 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 </head>
 <body>
 
-<!-- 固定背景レイヤー（奥→手前：sea / rays / snow / bubbles） -->
+<!-- 固定背景レイヤー（奥→手前：sea / rays / ice / snow / bubbles） -->
 <div id="sea"></div>
 <div id="rays"></div>
+<canvas id="ice" aria-hidden="true"></canvas>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div id="bubbles" aria-hidden="true"></div>
 <div id="glow" aria-hidden="true"></div>
@@ -729,10 +732,12 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   const sub = document.getElementById('sub');
   const depthRead = document.getElementById('depthRead');
   const snow = document.getElementById('snow');
+  const ice = document.getElementById('ice');
   const MAX_DEPTH = 420;
 
   // 共有状態
   let fieldOpacity = 0;     // マリンスノーの可視度（深いほど濃い）
+  let iceField = 1;         // 漂う氷塊の可視度（浅いほど多く・明るい／深いほど少なく・暗い）
   let tpx = 0, tpy = 0;     // ポインタ/ジャイロ目標 (-1..1)
   let px = 0, py = 0;       // 平滑化後の視点オフセット
   let tmx = innerWidth/2, tmy = innerHeight/2, mx = tmx, my = tmy; // 追従する光の位置(px)
@@ -748,6 +753,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     fieldOpacity = clamp((p-0.12)*1.5, 0, 0.85);
     bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3);
     if (snow) snow.style.opacity = fieldOpacity.toFixed(3);
+    iceField = clamp(1 - p*1.15, 0.12, 1);
     progress.style.width = (p*100).toFixed(2)+'%';
     const deep = p > 0.16;
     nav.classList.toggle('deep', deep);
@@ -811,7 +817,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 
   /* ========== マリンスノー canvas ========== */
   const ctx = snow ? snow.getContext('2d') : null;
-  let DPR = 1, cw = 0, parts = [], sprites = [], spriteGlow = null;
+  const ictx = ice ? ice.getContext('2d') : null;
+  let DPR = 1, cw = 0, parts = [], sprites = [], spriteGlow = null, iceParts = [], iceSprites = [];
   const makeSprite = (coreStop, rgb) => {
     const c0 = rgb ? `rgba(${rgb},0.95)` : 'rgba(224,242,252,0.95)';
     const c1 = rgb ? `rgba(${rgb},0.4)`  : 'rgba(190,225,245,0.32)';
@@ -843,15 +850,49 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     }
     parts.sort((m,n)=>m.z-n.z); // 遠→近
   };
-  const resizeCanvas = () => {
-    if (!ctx) return;
-    DPR = Math.min(2, devicePixelRatio||1);
-    snow.width = Math.round(innerWidth*DPR);
-    snow.height = Math.round(innerHeight*DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    if (innerWidth !== cw){ cw = innerWidth; initParts(); }
+  // 多面体の青白い氷片スプライトを事前生成
+  const makeIceSprite = () => {
+    const sz=64, cx=sz/2, cy=sz/2, R=sz*0.42;
+    const cv=document.createElement('canvas'); cv.width=cv.height=sz;
+    const c=cv.getContext('2d');
+    const n=5+((Math.random()*3)|0), pts=[];
+    for (let i=0;i<n;i++){
+      const ang=(i/n)*6.283+Math.random()*0.5, rr=R*(0.62+Math.random()*0.38);
+      pts.push([cx+Math.cos(ang)*rr, cy+Math.sin(ang)*rr]);
+    }
+    const g=c.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    g.addColorStop(0,'rgba(228,243,253,0.88)');
+    g.addColorStop(0.5,'rgba(180,216,238,0.55)');
+    g.addColorStop(1,'rgba(120,170,205,0.32)');
+    c.beginPath(); pts.forEach((p,i)=> i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1])); c.closePath();
+    c.fillStyle=g; c.fill();
+    c.strokeStyle='rgba(205,233,249,0.22)'; c.lineWidth=1;             // 内部のファセット線
+    c.beginPath(); c.moveTo(pts[0][0],pts[0][1]); c.lineTo(cx,cy); c.lineTo(pts[n>>1][0],pts[n>>1][1]); c.stroke();
+    c.strokeStyle='rgba(246,252,255,0.7)'; c.lineWidth=1.5;            // 明るいハイライト稜
+    c.beginPath(); c.moveTo(pts[0][0],pts[0][1]); c.lineTo(pts[1][0],pts[1][1]); c.stroke();
+    return cv;
   };
-  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; spriteGlow=makeSprite(0.35,'127,230,255'); resizeCanvas(); }
+  const initIce = () => {
+    const count = innerWidth<700 ? 14 : Math.round(clamp(innerWidth*innerHeight/60000, 22, 40));
+    iceParts=[];
+    for (let i=0;i<count;i++){
+      const z=Math.random();
+      iceParts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
+        r:9+z*z*38, vy:0.05+z*0.22, ph:Math.random()*6.28, sway:0.1+Math.random()*0.22,
+        rot:Math.random()*6.28, vr:(Math.random()*2-1)*0.0026, a:0.14+z*0.3,
+        rank:Math.random(), sp:iceSprites[(Math.random()*iceSprites.length)|0] });
+    }
+    iceParts.sort((m,n)=>m.z-n.z); // 遠→近
+  };
+  const resizeCanvas = () => {
+    DPR = Math.min(2, devicePixelRatio||1);
+    if (ctx){ snow.width=Math.round(innerWidth*DPR); snow.height=Math.round(innerHeight*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); }
+    if (ictx){ ice.width=Math.round(innerWidth*DPR); ice.height=Math.round(innerHeight*DPR); ictx.setTransform(DPR,0,0,DPR,0,0); }
+    if (innerWidth !== cw){ cw = innerWidth; if(ctx) initParts(); if(ictx) initIce(); }
+  };
+  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; spriteGlow=makeSprite(0.35,'127,230,255'); }
+  if (ictx){ iceSprites=[makeIceSprite(),makeIceSprite(),makeIceSprite(),makeIceSprite(),makeIceSprite()]; }
+  if (ctx||ictx) resizeCanvas();
   const updateSnow = (dts, dy) => {
     if (!ctx || fieldOpacity<=0.01) return;
     const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
@@ -877,6 +918,33 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
       ctx.drawImage(sp, (q.x+ox)-s, (q.y+oy)-s, s*2, s*2);
     }
     ctx.globalAlpha = 1;
+  };
+  const updateIce = (dts, dy) => {
+    if (!ictx) return;
+    const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
+    for (let i=0;i<iceParts.length;i++){
+      const q=iceParts[i];
+      q.y += q.vy*dts + stream*q.z*0.12;
+      q.x += Math.sin(q.ph += 0.006*dts)*q.sway*dts;
+      q.rot += q.vr*dts;
+      if (q.y>H+70){ q.y=-70; q.x=Math.random()*W; }
+      else if (q.y<-70){ q.y=H+70; q.x=Math.random()*W; }
+    }
+  };
+  const drawIce = () => {
+    if (!ictx) return;
+    ictx.clearRect(0,0,innerWidth,innerHeight);
+    if (iceField<=0.02) return;
+    for (let i=0;i<iceParts.length;i++){
+      const q=iceParts[i];
+      const vis = clamp((iceField - q.rank)*4, 0, 1);   // 深いほど数を減らす（rank でフェード間引き）
+      if (vis<=0) continue;
+      const ox=px*q.z*20, oy=py*q.z*20, s=q.r;
+      ictx.globalAlpha = q.a*(0.4+0.6*iceField)*vis;    // 深いほど暗く（薄く）
+      ictx.save(); ictx.translate(q.x+ox, q.y+oy); ictx.rotate(q.rot);
+      ictx.drawImage(q.sp, -s, -s, s*2, s*2); ictx.restore();
+    }
+    ictx.globalAlpha=1;
   };
 
   /* ========== 入力：ポインタ（PC） / ジャイロ（スマホ）========== */
@@ -922,6 +990,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     if (scrollDirty){ applyScroll(); scrollDirty=false; }
     updateSnow(dts, dy);
     drawSnow();
+    updateIce(dts, dy);
+    drawIce();
     rafId = requestAnimationFrame(tick);
   };
   rafId = requestAnimationFrame(tick);
