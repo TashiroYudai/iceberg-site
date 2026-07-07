@@ -753,7 +753,10 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     fieldOpacity = clamp((p-0.12)*1.5, 0, 0.85);
     bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3);
     if (snow) snow.style.opacity = fieldOpacity.toFixed(3);
-    iceField = clamp(1 - p*1.15, 0.12, 1);
+    // 氷塊はヒーロー（水面上）には出さず、水面を越えて水中へ入ってから立ち上がり、深いほど減衰
+    const iceEnter = clamp((scrollY/innerHeight - 0.85)/0.5, 0, 1);
+    const iceDeep  = clamp(1 - (p-0.32)*1.15, 0.16, 1);
+    iceField = iceEnter * iceDeep;
     progress.style.width = (p*100).toFixed(2)+'%';
     const deep = p > 0.16;
     nav.classList.toggle('deep', deep);
@@ -850,36 +853,44 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     }
     parts.sort((m,n)=>m.z-n.z); // 遠→近
   };
-  // 多面体の青白い氷片スプライトを事前生成
+  // 立体的な氷塊スプライト（低ポリ結晶・左上光源で面ごとに陰影＋受光稜のハイライト）
   const makeIceSprite = () => {
-    const sz=64, cx=sz/2, cy=sz/2, R=sz*0.42;
+    const sz=72, cx=sz/2, cy=sz/2, R=sz*0.4;
     const cv=document.createElement('canvas'); cv.width=cv.height=sz;
-    const c=cv.getContext('2d');
-    const n=5+((Math.random()*3)|0), pts=[];
+    const c=cv.getContext('2d'); c.lineJoin='round'; c.lineCap='round';
+    const n=6+((Math.random()*3)|0), outer=[];
     for (let i=0;i<n;i++){
-      const ang=(i/n)*6.283+Math.random()*0.5, rr=R*(0.62+Math.random()*0.38);
-      pts.push([cx+Math.cos(ang)*rr, cy+Math.sin(ang)*rr]);
+      const ang=(i/n)*6.283+(Math.random()-0.5)*0.55, rr=R*(0.66+Math.random()*0.34);
+      outer.push([cx+Math.cos(ang)*rr, cy+Math.sin(ang)*rr]);
     }
-    const g=c.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
-    g.addColorStop(0,'rgba(228,243,253,0.88)');
-    g.addColorStop(0.5,'rgba(180,216,238,0.55)');
-    g.addColorStop(1,'rgba(120,170,205,0.32)');
-    c.beginPath(); pts.forEach((p,i)=> i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1])); c.closePath();
-    c.fillStyle=g; c.fill();
-    c.strokeStyle='rgba(205,233,249,0.22)'; c.lineWidth=1;             // 内部のファセット線
-    c.beginPath(); c.moveTo(pts[0][0],pts[0][1]); c.lineTo(cx,cy); c.lineTo(pts[n>>1][0],pts[n>>1][1]); c.stroke();
-    c.strokeStyle='rgba(246,252,255,0.7)'; c.lineWidth=1.5;            // 明るいハイライト稜
-    c.beginPath(); c.moveTo(pts[0][0],pts[0][1]); c.lineTo(pts[1][0],pts[1][1]); c.stroke();
+    const apex=[cx-R*(0.1+Math.random()*0.2), cy-R*(0.15+Math.random()*0.25)]; // 稜線の頂点（左上寄り）
+    const lx=-0.55, ly=-0.83;                                                   // 光源：左上
+    for (let i=0;i<n;i++){                                                       // apex から各辺へ三角ファセット
+      const a=outer[i], b=outer[(i+1)%n];
+      const mx=(a[0]+b[0]+apex[0])/3-cx, my=(a[1]+b[1]+apex[1])/3-cy, L=Math.hypot(mx,my)||1;
+      const lam=clamp(0.5+0.5*((mx/L)*(-lx)+(my/L)*(-ly)),0,1);                  // 面の向き→明暗
+      const sh=0.5+lam*0.55;
+      const r=Math.min(255,214*sh)|0, g=Math.min(255,235*sh)|0, bl=Math.min(255,250*sh)|0;
+      c.beginPath(); c.moveTo(apex[0],apex[1]); c.lineTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.closePath();
+      c.fillStyle=`rgba(${r},${g},${bl},${(0.46+lam*0.42).toFixed(2)})`; c.fill();
+      c.strokeStyle='rgba(224,244,255,0.22)'; c.lineWidth=0.7; c.stroke();       // 面の稜線
+    }
+    c.strokeStyle='rgba(250,253,255,0.72)'; c.lineWidth=1.5;                     // 受光側（左上）のハイライト稜
+    for (let i=0;i<n;i++){
+      const a=outer[i], b=outer[(i+1)%n];
+      const mx=(a[0]+b[0])/2-cx, my=(a[1]+b[1])/2-cy, L=Math.hypot(mx,my)||1;
+      if (((mx/L)*(-lx)+(my/L)*(-ly))>0.32){ c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
+    }
     return cv;
   };
   const initIce = () => {
-    const count = innerWidth<700 ? 14 : Math.round(clamp(innerWidth*innerHeight/60000, 22, 40));
+    const count = innerWidth<700 ? 20 : Math.round(clamp(innerWidth*innerHeight/44000, 30, 56));
     iceParts=[];
     for (let i=0;i<count;i++){
       const z=Math.random();
       iceParts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
         r:9+z*z*38, vy:0.05+z*0.22, ph:Math.random()*6.28, sway:0.1+Math.random()*0.22,
-        rot:Math.random()*6.28, vr:(Math.random()*2-1)*0.0026, a:0.14+z*0.3,
+        rot:Math.random()*6.28, vr:(Math.random()*2-1)*0.0026, a:0.2+z*0.36,
         rank:Math.random(), sp:iceSprites[(Math.random()*iceSprites.length)|0] });
     }
     iceParts.sort((m,n)=>m.z-n.z); // 遠→近
@@ -891,7 +902,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     if (innerWidth !== cw){ cw = innerWidth; if(ctx) initParts(); if(ictx) initIce(); }
   };
   if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; spriteGlow=makeSprite(0.35,'127,230,255'); }
-  if (ictx){ iceSprites=[makeIceSprite(),makeIceSprite(),makeIceSprite(),makeIceSprite(),makeIceSprite()]; }
+  if (ictx){ iceSprites=[]; for(let i=0;i<7;i++) iceSprites.push(makeIceSprite()); }
   if (ctx||ictx) resizeCanvas();
   const updateSnow = (dts, dy) => {
     if (!ctx || fieldOpacity<=0.01) return;
