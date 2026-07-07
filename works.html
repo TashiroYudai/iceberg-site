@@ -128,8 +128,8 @@ a{color:inherit;text-decoration:none}
 .nav-cta:hover{background:var(--lumen);color:var(--abyss)!important;border-color:var(--lumen);box-shadow:0 0 22px rgba(127,230,255,.5)}
 .nav-links a.lnk{display:none}
 /* ハンバーガー（スマホ用メニュー） */
-.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:40px;padding:0 11px;
-  border:1px solid currentColor;border-radius:11px;background:transparent;color:var(--ink);cursor:pointer;transition:color .5s linear}
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;padding:0 6px;
+  border:0;background:transparent;color:var(--ink);cursor:pointer;transition:color .5s linear}
 .nav.deep .nav-toggle{color:var(--foam)}
 .nav-toggle span{display:block;height:2px;background:currentColor;border-radius:2px;transition:transform .3s var(--ease),opacity .2s}
 .nav.open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -489,9 +489,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   </a>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="メニュー" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
   <nav class="nav-links" id="navLinks" aria-label="メイン">
-    <a class="lnk" href="index.html#services">サービス</a>
-    <a class="lnk" href="index.html#depth">考え方</a>
-    <a class="lnk" href="index.html#approach">進め方</a>
+    <a class="lnk" href="index.html">ホーム</a>
     <a class="lnk" href="works.html" aria-current="page">実績</a>
     <a class="nav-cta" href="index.html#contact">相談する</a>
   </nav>
