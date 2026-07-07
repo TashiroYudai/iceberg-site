@@ -884,12 +884,14 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     return cv;
   };
   const initIce = () => {
-    const count = innerWidth<700 ? 20 : Math.round(clamp(innerWidth*innerHeight/44000, 30, 56));
+    const mob = innerWidth<700;
+    const count = mob ? 20 : Math.round(clamp(innerWidth*innerHeight/44000, 30, 56));
+    const rBase = mob ? 6 : 9, rSpan = mob ? 20 : 38;   // スマホは大きい氷塊を小さめに
     iceParts=[];
     for (let i=0;i<count;i++){
       const z=Math.random();
       iceParts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
-        r:9+z*z*38, vy:0.05+z*0.22, ph:Math.random()*6.28, sway:0.1+Math.random()*0.22,
+        r:rBase+z*z*rSpan, vy:0.05+z*0.22, ph:Math.random()*6.28, sway:0.1+Math.random()*0.22,
         rot:Math.random()*6.28, vr:(Math.random()*2-1)*0.0026, a:0.2+z*0.36,
         rank:Math.random(), sp:iceSprites[(Math.random()*iceSprites.length)|0] });
     }
