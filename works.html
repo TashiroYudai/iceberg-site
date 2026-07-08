@@ -68,7 +68,7 @@ a{color:inherit;text-decoration:none}
 ::selection{background:var(--lumen);color:var(--abyss)}
 
 /* ===================== 固定の海（背景レイヤー：奥→手前）===================== */
-#sea{position:fixed;inset:0;z-index:-5;background:var(--sky);transition:background-color .15s linear}
+#sea{position:fixed;inset:0;z-index:-5;background:radial-gradient(130% 90% at 50% -8%, #10405e 0%, #082b41 42%, var(--abyss) 100%)}
 /* 上部の光（ゴッドレイ）— 深くなると消える */
 #rays{position:fixed;inset:0;z-index:-3;pointer-events:none;mix-blend-mode:screen;opacity:1;will-change:transform,opacity;
   background:
@@ -386,24 +386,60 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 }
 :focus-visible{outline:2px solid var(--lumen);outline-offset:3px;border-radius:4px}
 
-/* ===================== WORKS (実績ページ) ===================== */
-.works-hero{min-height:78svh;display:flex;flex-direction:column;justify-content:center}
-.works-hero h1{font-size:clamp(2rem,5.4vw,3.6rem)}
+/* ===================== WORKS（実績・俯瞰版） ===================== */
+/* HERO：俯瞰ステージ（自分専用のビューポート→テキストは以降） */
+.works-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;
+  gap:clamp(12px,2.6vh,22px);padding-top:clamp(88px,11vh,116px);padding-bottom:32px;color:var(--foam)}
+.works-hero h1{font-size:clamp(1.9rem,5.4vw,3.4rem);color:var(--foam);line-height:1.32}
+.works-hero .lead{color:var(--foam-dim)}
+.works-hero .scrollcue{color:var(--foam)}
+.aerial-copy{width:100%}
+.aerial-stage{flex:0 0 auto;display:block;margin-top:clamp(6px,2vh,22px)}
+.aerial{display:block;margin:0 auto;width:min(1000px,92vw);height:auto;aspect-ratio:1000/640;max-height:54vh;overflow:visible}
+
+/* 俯瞰の氷山・ラベル */
+.berg-a{cursor:pointer}
+.berg-lbl{font-family:"IBM Plex Mono",monospace;font-size:15px;letter-spacing:.14em;fill:var(--foam)}
+.berg-sub{font-family:"IBM Plex Sans JP",sans-serif;font-size:13px;fill:var(--foam-dim)}
+.berg-a:hover .peakline,.berg-a:focus-visible .peakline{stroke-opacity:.95}
+.berg-a:hover .berg-lbl{fill:var(--lumen)}
+.berg-a:focus{outline:none}
+.berg-a:focus-visible .hit{stroke:var(--lumen);stroke-opacity:.75;stroke-width:1.5}
+
+/* 静かなアニメ（reduced-motion は *{animation:none} で無効化） */
+.ushadow{transform-box:fill-box;transform-origin:center;animation:ashimmer 9s ease-in-out infinite}
+.peak{transform-box:fill-box;transform-origin:center;animation:awobble 11s ease-in-out infinite}
+.berg-a:nth-of-type(2) .ushadow{animation-delay:-3.5s}
+.berg-a:nth-of-type(2) .peak{animation-delay:-2s}
+@keyframes ashimmer{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.035)}}
+@keyframes awobble{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+
+/* 事例カード（文章主体・単一カラム） */
 .case-list{display:flex;flex-direction:column;gap:clamp(16px,2.5vw,26px);margin-top:clamp(34px,5vw,56px)}
-.case{padding:clamp(24px,4vw,40px);display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(20px,4vw,42px);align-items:center}
-@media(max-width:760px){.case{grid-template-columns:1fr;gap:22px}}
+.case{display:block;padding:clamp(26px,4vw,44px);scroll-margin-top:92px}
 .case-role{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.16em;color:var(--lumen-soft)}
-.case h3{font-size:clamp(1.25rem,2.6vw,1.6rem);margin:14px 0 12px;color:var(--foam)}
-.case-issue{color:var(--foam-dim);font-size:.98rem;line-height:1.85}
-.case-metric{text-align:center;border-left:1px solid rgba(255,255,255,.12);padding-left:clamp(20px,4vw,40px)}
-@media(max-width:760px){.case-metric{border-left:0;border-top:1px solid rgba(255,255,255,.12);padding-left:0;padding-top:22px;text-align:left}}
+.case h3{font-size:clamp(1.3rem,2.8vw,1.7rem);margin:12px 0 0;color:var(--foam);line-height:1.5}
+
+/* 5ステップ（ドットのタイムライン） */
+.case-steps{list-style:none;margin:clamp(22px,3vw,32px) 0 0;padding:0;border-left:1px solid rgba(127,230,255,.18)}
+.step{position:relative;padding:12px 0 16px 30px}
+.step::before{content:"";position:absolute;left:-5px;top:19px;width:9px;height:9px;border-radius:50%;
+  background:var(--abyss);border:2px solid var(--lumen-soft);box-shadow:0 0 10px rgba(127,230,255,.4)}
+.step .k{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;color:var(--lumen);margin-bottom:5px}
+.step p{color:var(--foam);font-size:1rem;line-height:1.85}
+.step .note{display:block;margin-top:6px;font-size:.76rem;color:var(--foam-dim)}
+
+/* 結果ブロック（大きな数字） */
+.case-result{margin-top:clamp(22px,3.5vw,34px);padding-top:clamp(20px,3vw,28px);border-top:1px solid rgba(255,255,255,.12)}
 .case-mlabel{display:block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--foam-dim)}
-.case-num{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1;letter-spacing:-.02em;margin:6px 0;
-  font-size:clamp(3rem,9vw,5.2rem);background:linear-gradient(180deg,var(--ice),var(--lumen));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.case-num .u{font-size:.3em;-webkit-text-fill-color:var(--foam-dim);color:var(--foam-dim);letter-spacing:.04em;margin:0 .06em}
-.case-detail{margin-top:14px;color:var(--foam-dim);font-size:.9rem;line-height:1.85}
-.product{padding:clamp(24px,4vw,40px);display:flex;flex-wrap:wrap;gap:22px 40px;align-items:center;justify-content:space-between;margin-top:clamp(34px,5vw,56px)}
+.case-num{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1;letter-spacing:-.02em;margin:8px 0;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:.06em;font-size:clamp(3rem,10vw,5.4rem);
+  background:linear-gradient(180deg,var(--ice),var(--lumen));-webkit-background-clip:text;background-clip:text;color:transparent}
+.case-num .u{font-size:.26em;-webkit-text-fill-color:var(--foam-dim);color:var(--foam-dim);letter-spacing:.04em;margin:0 .04em}
+.case-detail{margin-top:12px;color:var(--foam-dim);font-size:.92rem;line-height:1.85}
+
+/* 自社プロダクト */
+.product{padding:clamp(24px,4vw,40px);display:flex;flex-wrap:wrap;gap:22px 40px;align-items:center;justify-content:space-between;margin-top:clamp(34px,5vw,56px);scroll-margin-top:92px}
 .product-body{flex:1 1 320px}
 .product h3{font-size:clamp(1.3rem,2.8vw,1.7rem);margin:12px 0 10px;color:var(--foam)}
 .product-cta{flex:0 0 auto}
@@ -413,72 +449,12 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 </head>
 <body>
 
-<!-- 固定背景レイヤー（奥→手前：sea / rays / ice / snow / bubbles） -->
+<!-- 固定背景（俯瞰版：静的ネイビー＋進捗バーのみ） -->
 <div id="sea"></div>
-<div id="rays"></div>
-<canvas id="ice" aria-hidden="true"></canvas>
-<canvas id="snow" aria-hidden="true"></canvas>
-<div id="bubbles" aria-hidden="true"></div>
-<div id="glow" aria-hidden="true"></div>
 <div id="progress"></div>
 
-<!-- 深度ゲージ -->
-<aside class="gauge" aria-hidden="true">
-  <div class="read"><span id="depthRead">0</span>m<small>DEPTH</small></div>
-  <div class="track">
-    <span class="tick" style="top:0%"></span>
-    <span class="tick" style="top:25%"></span>
-    <span class="tick" style="top:50%"></span>
-    <span class="tick" style="top:75%"></span>
-    <span class="tick" style="top:100%"></span>
-    <div class="sub" id="sub" aria-hidden="true">
-      <svg viewBox="0 0 124 64" role="img">
-        <defs>
-          <linearGradient id="subBody" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#dcebf3"/><stop offset=".55" stop-color="#6f97ac"/><stop offset="1" stop-color="#274656"/>
-          </linearGradient>
-          <linearGradient id="subBeam" x1="1" y1="0" x2="0" y2="0">
-            <stop offset="0" stop-color="var(--lightcol, #cdf6ff)" stop-opacity=".9"/><stop offset="1" stop-color="var(--lightcol, #cdf6ff)" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <!-- サーチライト（前方＝左） -->
-        <polygon class="beam" points="22,28 22,40 -26,54 -26,14" fill="url(#subBeam)" style="mix-blend-mode:screen"/>
-        <!-- 気泡（中央＝司令塔あたりから立ちのぼる） -->
-        <circle class="bub b1" cx="62" cy="17" r="1.9" fill="#cdeef8"/>
-        <circle class="bub b2" cx="70" cy="15" r="1.4" fill="#cdeef8"/>
-        <circle class="bub b3" cx="56" cy="16" r="1.6" fill="#cdeef8"/>
-        <circle class="bub b4" cx="74" cy="17" r="1.2" fill="#cdeef8"/>
-        <circle class="bub b5" cx="66" cy="13" r="1.3" fill="#cdeef8"/>
-        <!-- スクリュー（後方＝右） -->
-        <rect x="104" y="33" width="9" height="2" rx="1" fill="#8fb1c2"/>
-        <g class="prop">
-          <ellipse cx="113" cy="34" rx="2.6" ry="9" fill="#dbeaf2"/>
-          <ellipse cx="113" cy="34" rx="9" ry="2.6" fill="#b7d2df"/>
-        </g>
-        <!-- 尾翼 -->
-        <path d="M96 20 L106 11 L100 23 Z" fill="#46708a"/>
-        <path d="M96 48 L106 53 L100 41 Z" fill="#46708a"/>
-        <!-- 艦体 -->
-        <ellipse cx="62" cy="34" rx="44" ry="15" fill="url(#subBody)" stroke="#7fe6ff" stroke-width="1" stroke-opacity=".45"/>
-        <path d="M18 34 a44 15 0 0 0 88 0 Z" fill="#04141f" opacity=".14"/>
-        <!-- セイル（司令塔・上）＋潜望鏡 -->
-        <rect x="56" y="12" width="22" height="13" rx="6" fill="#365b72"/>
-        <line x1="74" y1="15" x2="80" y2="7" stroke="#9fc3d6" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- 舷窓 -->
-        <circle class="port" cx="44" cy="34" r="3.1"/>
-        <circle class="port" cx="60" cy="34" r="3.1"/>
-        <circle class="port" cx="76" cy="34" r="3.1"/>
-        <!-- 船首灯（前＝左）＋暖色グロー -->
-        <circle class="halo" cx="22" cy="34" r="8.5"/>
-        <circle class="bow" cx="22" cy="34" r="3.8"/>
-      </svg>
-      <span class="ping"></span>
-    </div>
-  </div>
-</aside>
-
 <!-- NAV -->
-<header class="nav" id="nav">
+<header class="nav deep" id="nav">
   <a class="brand" href="index.html" aria-label="Fathom Systems ホーム">
     <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2 L19 9 L12 6.5 L5 9 Z" fill="currentColor"/>
@@ -499,15 +475,65 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 
   <!-- ===================== HERO / 00m WORKS ===================== -->
   <section class="hero works-hero" id="top">
-    <div class="wrap">
-      <div class="hero-head">
-        <span class="eyebrow">00m · WORKS</span>
-        <h1 style="margin-top:18px"><span class="line l1">水面下の課題を、</span><br><span class="em line l2">成果に変えた記録。</span></h1>
-      </div>
-      <div class="hero-body">
-        <p class="lead" style="max-width:44ch">見えている作業の裏に、時間とミスを生む「本当の課題」がある。調べて突き止め、ツールで解決した実例です。</p>
-        <a class="scrollcue" href="#cases"><span class="dive" aria-hidden="true"></span> 実績を見る</a>
-      </div>
+    <div class="wrap aerial-copy">
+      <span class="eyebrow">CHART · 実績</span>
+      <h1 style="margin-top:16px"><span class="line l1">水面に見えるのは、</span><br><span class="em line l2">氷山の頂だけ。</span></h1>
+      <p class="lead" style="max-width:46ch">上空から見た、課題の海。白い頂は見えている作業、その下に広がる大きな影が「水面下の本当の課題」です。氷山を選ぶと、その事例へ。</p>
+      <a class="scrollcue" href="#cases"><span class="dive" aria-hidden="true"></span> 実績を見る</a>
+    </div>
+    <div class="aerial-stage">
+      <svg class="aerial" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="aerialTitle aerialDesc">
+        <title id="aerialTitle">氷山原の俯瞰図</title>
+        <desc id="aerialDesc">上空から見た紺碧の海。氷山の白い頂と、その下に広がる大きな青白い影＝水面下の課題。各氷山は事例へのリンクです。</desc>
+        <defs>
+          <radialGradient id="aShadow" cx=".5" cy=".42" r=".55">
+            <stop offset="0" stop-color="#cdefff" stop-opacity=".5"/>
+            <stop offset=".5" stop-color="#4aa9cf" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#7fe6ff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="aPeak" cx=".4" cy=".3" r=".8">
+            <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcedf7"/>
+          </radialGradient>
+          <filter id="aBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="20"/></filter>
+          <filter id="aBlurS" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+        </defs>
+
+        <!-- 海図グリッド（密度担当・静止） -->
+        <g stroke="#7fe6ff" stroke-opacity=".09" stroke-width="1" shape-rendering="crispEdges">
+          <line x1="100" y1="0" x2="100" y2="640"/><line x1="200" y1="0" x2="200" y2="640"/><line x1="300" y1="0" x2="300" y2="640"/><line x1="400" y1="0" x2="400" y2="640"/><line x1="500" y1="0" x2="500" y2="640"/><line x1="600" y1="0" x2="600" y2="640"/><line x1="700" y1="0" x2="700" y2="640"/><line x1="800" y1="0" x2="800" y2="640"/><line x1="900" y1="0" x2="900" y2="640"/>
+          <line x1="0" y1="80" x2="1000" y2="80"/><line x1="0" y1="160" x2="1000" y2="160"/><line x1="0" y1="240" x2="1000" y2="240"/><line x1="0" y1="320" x2="1000" y2="320"/><line x1="0" y1="400" x2="1000" y2="400"/><line x1="0" y1="480" x2="1000" y2="480"/><line x1="0" y1="560" x2="1000" y2="560"/>
+        </g>
+        <!-- 目盛りティック -->
+        <g stroke="#7fe6ff" stroke-opacity=".24" stroke-width="1" shape-rendering="crispEdges">
+          <line x1="50" y1="0" x2="50" y2="9"/><line x1="150" y1="0" x2="150" y2="9"/><line x1="250" y1="0" x2="250" y2="9"/><line x1="350" y1="0" x2="350" y2="9"/><line x1="450" y1="0" x2="450" y2="9"/><line x1="550" y1="0" x2="550" y2="9"/><line x1="650" y1="0" x2="650" y2="9"/><line x1="750" y1="0" x2="750" y2="9"/><line x1="850" y1="0" x2="850" y2="9"/><line x1="950" y1="0" x2="950" y2="9"/>
+          <line x1="0" y1="40" x2="9" y2="40"/><line x1="0" y1="120" x2="9" y2="120"/><line x1="0" y1="200" x2="9" y2="200"/><line x1="0" y1="280" x2="9" y2="280"/><line x1="0" y1="360" x2="9" y2="360"/><line x1="0" y1="440" x2="9" y2="440"/><line x1="0" y1="520" x2="9" y2="520"/><line x1="0" y1="600" x2="9" y2="600"/>
+        </g>
+        <!-- 座標・水深ソ ンディング（かすか） -->
+        <g fill="#9fc3d6" font-family="'IBM Plex Mono', monospace" font-size="12" letter-spacing=".08em">
+          <text x="16" y="24" fill-opacity=".45">47°12′N</text><text x="884" y="24" fill-opacity=".45">09°40′W</text>
+          <text x="120" y="150" fill-opacity=".3">312</text><text x="560" y="228" fill-opacity=".3">78</text><text x="712" y="560" fill-opacity=".3">140</text><text x="452" y="470" fill-opacity=".3">205</text>
+        </g>
+
+        <!-- ICEBERG 1 → CASE 01（主役・大） -->
+        <a class="berg-a" href="#case-01" aria-label="CASE 01 警備業の事例へ移動">
+          <rect class="hit" x="150" y="150" width="360" height="320" fill="transparent"/>
+          <ellipse class="ushadow" cx="330" cy="315" rx="188" ry="150" fill="url(#aShadow)" filter="url(#aBlur)"/>
+          <polygon class="peak" points="300,292 328,266 360,262 386,286 372,314 336,326 308,312" fill="url(#aPeak)" filter="url(#aBlurS)"/>
+          <polygon class="peakline" points="300,292 328,266 360,262 386,286 372,314 336,326 308,312" fill="none" stroke="#7fe6ff" stroke-opacity=".55" stroke-width="1.3"/>
+          <text class="berg-lbl" x="250" y="206">CASE 01</text>
+          <text class="berg-sub" x="250" y="228">警備業</text>
+        </a>
+
+        <!-- ICEBERG 2 → PRODUCT（脇役・小） -->
+        <a class="berg-a" href="#product" aria-label="自社プロダクト 現金出納帳Pro へ移動">
+          <rect class="hit" x="628" y="330" width="320" height="250" fill="transparent"/>
+          <ellipse class="ushadow" cx="782" cy="452" rx="118" ry="94" fill="url(#aShadow)" filter="url(#aBlur)"/>
+          <polygon class="peak" points="760,438 786,422 806,440 792,462 766,462" fill="url(#aPeak)" filter="url(#aBlurS)"/>
+          <polygon class="peakline" points="760,438 786,422 806,440 792,462 766,462" fill="none" stroke="#7fe6ff" stroke-opacity=".5" stroke-width="1.2"/>
+          <text class="berg-lbl" x="676" y="384">PRODUCT</text>
+          <text class="berg-sub" x="676" y="405">現金出納帳Pro</text>
+        </a>
+      </svg>
     </div>
   </section>
 
@@ -515,22 +541,32 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   <section class="services" id="cases">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">−140m · 事例</span>
+        <span class="eyebrow">SECTOR A · 事例</span>
         <h2>課題を、<br>数字で解決する。</h2>
         <p>お客様の状況に合わせて課題を見つけ、ツールにして解決します。作業時間とミスが減り、その効果は金額に換算すると想像以上に大きくなります。</p>
       </div>
       <div class="case-list">
 
-        <article class="case panel reveal">
-          <div class="case-body">
+        <article class="case panel reveal" id="case-01">
+          <header class="case-head">
             <span class="case-role">CASE 01 · 警備業</span>
             <h3>属人化した事務作業を、回り続ける仕組みに。</h3>
-            <p class="case-issue">事務作業が特定の人に依存し、手作業で時間を圧迫していた。原因を洗い出し、作業そのものを見直したうえでシステム化。</p>
-          </div>
-          <div class="case-metric">
-            <span class="case-mlabel">事務作業</span>
-            <div class="case-num"><span class="u">約</span><span class="count" data-to="75" data-suf="">75</span><span class="u">%</span></div>
-            <span class="case-mlabel">削減</span>
+          </header>
+
+          <ol class="case-steps">
+            <li class="step"><span class="k">声</span>
+              <p>「この事務作業、特定の人しかできなくて、その人が休むと業務が止まってしまう」<span class="note">※匿名事例のため、代表的なご相談として記載しています。</span></p></li>
+            <li class="step"><span class="k">深掘り</span>
+              <p>作業の手順を一つずつ洗い出し、どこに時間がかかっているのかを突き止めました。</p></li>
+            <li class="step"><span class="k">本質課題</span>
+              <p>問題は「人」ではなく作業の設計。事務作業が特定の人に依存し、手作業が時間を圧迫していました。</p></li>
+            <li class="step"><span class="k">解決</span>
+              <p>作業そのものを見直したうえでシステム化。誰がやっても同じ結果になる仕組みにしました。</p></li>
+          </ol>
+
+          <div class="case-result">
+            <span class="case-mlabel">結果 — 事務作業</span>
+            <div class="case-num"><span class="u">約</span><span class="count" data-to="75" data-suf="">75</span><span class="u">%</span><span class="u">削減</span></div>
             <p class="case-detail">月8.5時間 → 2時間（年間約77時間）。浮いた時間は時給換算で費用を数年で回収でき、より価値のある仕事へ。</p>
           </div>
         </article>
@@ -545,7 +581,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   <section class="services" id="product">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">−300m · プロダクト</span>
+        <span class="eyebrow">SECTOR B · プロダクト</span>
         <h2>自社でつくり、<br>公開している。</h2>
         <p>お客様に届けるのと同じ思想を、自ら形にした技術の証明です。</p>
       </div>
@@ -566,7 +602,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   <!-- ===================== CTA / −420m ===================== -->
   <section class="contact" id="cta">
     <div class="wrap reveal">
-      <span class="eyebrow">−420m · Contact</span>
+      <span class="eyebrow">CONTACT</span>
       <h2 style="margin-top:16px">あなたの水面下の課題も、<br>見つけて解決します。</h2>
       <p>「何が問題かうまく言えない」——まずはそこからで大丈夫です。</p>
       <div class="actions"><a class="btn primary" href="index.html#contact">相談する →</a></div>
@@ -590,364 +626,49 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
     </nav>
   </div>
   <div class="wrap f-base">
-    <span class="seabed">−420m · SEABED</span>
+    <span class="seabed">SEABED</span>
     <span class="seabed">© 2026 Fathom Systems</span>
   </div>
 </footer>
 
 <script>
-(() => {
-  "use strict";
+(() => { "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
-  const lerp = (a,b,t) => a + (b-a)*t;
-
-  /* ---- 旅程の色：scroll 進捗 0..1 を補間 ---- */
-  const stops = [
-    [0.00, [207,231,243]], // sky
-    [0.16, [127,193,222]],
-    [0.30, [ 31,111,150]], // tide
-    [0.46, [ 18, 88,124]],
-    [0.64, [ 12, 58, 87]], // deep
-    [0.82, [  6, 36, 54]],
-    [1.00, [  3, 16, 26]], // abyss
-  ];
-  const colorAt = (p) => {
-    for (let i=0;i<stops.length-1;i++){
-      const [p0,c0]=stops[i], [p1,c1]=stops[i+1];
-      if (p<=p1){ const t=(p-p0)/(p1-p0||1);
-        return `rgb(${Math.round(lerp(c0[0],c1[0],t))},${Math.round(lerp(c0[1],c1[1],t))},${Math.round(lerp(c0[2],c1[2],t))})`; }
-    }
-    return `rgb(3,16,26)`;
-  };
-
   const root = document.documentElement;
-  const sea = document.getElementById('sea');
-  const rays = document.getElementById('rays');
-  const bubbles = document.getElementById('bubbles');
   const progress = document.getElementById('progress');
   const nav = document.getElementById('nav');
-  const gauge = document.querySelector('.gauge');
-  const sub = document.getElementById('sub');
-  const depthRead = document.getElementById('depthRead');
-  const snow = document.getElementById('snow');
-  const ice = document.getElementById('ice');
-  const MAX_DEPTH = 420;
 
-  // 共有状態
-  let fieldOpacity = 0;     // マリンスノーの可視度（深いほど濃い）
-  let iceField = 1;         // 漂う氷塊の可視度（浅いほど多く・明るい／深いほど少なく・暗い）
-  let tpx = 0, tpy = 0;     // ポインタ/ジャイロ目標 (-1..1)
-  let px = 0, py = 0;       // 平滑化後の視点オフセット
-  let tmx = innerWidth/2, tmy = innerHeight/2, mx = tmx, my = tmy; // 追従する光の位置(px)
-
-  /* ---- スクロール由来の状態を反映（モーション/静止 共通）---- */
-  const applyScroll = () => {
+  /* 進捗バー ＋ nav.scrolled（背景ブラー） */
+  const onScroll = () => {
     const max = root.scrollHeight - innerHeight;
     const p = clamp(max>0 ? scrollY/max : 0, 0, 1);
-    root.style.setProperty('--p', p.toFixed(4));
-    root.style.setProperty('--hp', clamp(scrollY/innerHeight, 0, 1).toFixed(4)); // ヒーロー内スクロール進捗（視差用）
-    sea.style.backgroundColor = colorAt(p);
-    rays.style.opacity = clamp(1 - p*2.4, 0, 1).toFixed(3);
-    fieldOpacity = clamp((p-0.12)*1.5, 0, 0.85);
-    bubbles.style.opacity = clamp((p-0.18)*1.6, 0, 0.9).toFixed(3);
-    if (snow) snow.style.opacity = fieldOpacity.toFixed(3);
-    // 氷塊はヒーロー（水面上）には出さず、水面を越えて水中へ入ってから立ち上がり、深いほど減衰
-    const iceEnter = clamp((scrollY/innerHeight - 0.85)/0.5, 0, 1);
-    const iceDeep  = clamp(1 - (p-0.32)*1.15, 0.16, 1);
-    iceField = iceEnter * iceDeep;
-    progress.style.width = (p*100).toFixed(2)+'%';
-    const deep = p > 0.16;
-    nav.classList.toggle('deep', deep);
-    if (gauge) gauge.classList.toggle('deep', deep);
-    nav.classList.toggle('scrolled', scrollY > 40);
-    const depth = Math.round(p*MAX_DEPTH);
-    if (depthRead) depthRead.textContent = depth === 0 ? '0' : '−'+depth;
-    if (sub){
-      sub.style.top = (p*100).toFixed(1)+'%';
-      sub.style.setProperty('--lit', clamp((p-0.12)*1.5, 0, 1).toFixed(3));
-    }
+    if (progress) progress.style.width = (p*100).toFixed(2)+'%';
+    if (nav) nav.classList.toggle('scrolled', scrollY > 40);
   };
+  let ticking = false;
+  addEventListener('scroll', () => { if(!ticking){ ticking=true; requestAnimationFrame(()=>{ onScroll(); ticking=false; }); } }, {passive:true});
+  addEventListener('resize', onScroll, {passive:true});
+  onScroll();
 
-  /* ---- スクロール・リビール（共通）---- */
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  /* スクロール・リビール（フェードイン） */
+  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },
+    {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  /* ---- 数字カウントアップ（見えたら 0→目標。共通）---- */
-  const countUp = (el)=>{
-    const to=+el.dataset.to, suf=el.dataset.suf||''; let s=null;
-    const step=(t)=>{ if(s==null)s=t; const k=clamp((t-s)/1200,0,1); const e=1-Math.pow(1-k,3);
-      el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
-  };
-  const counters=document.querySelectorAll('.count');
-  if (reduce){ counters.forEach(el=>{ el.textContent=(+el.dataset.to)+(el.dataset.suf||''); }); }
+  /* 数字カウントアップ（見えたら 0→目標） */
+  const counters = document.querySelectorAll('.count');
+  if (reduce){ counters.forEach(el=> el.textContent=(+el.dataset.to)+(el.dataset.suf||'')); }
   else {
-    const cio=new IntersectionObserver((ents)=>{ ents.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); cio.unobserve(e.target); } }); }, {threshold:0.6});
+    const up = (el)=>{ const to=+el.dataset.to, suf=el.dataset.suf||''; let s=null;
+      const step=(t)=>{ if(s==null)s=t; const k=clamp((t-s)/1200,0,1); const e=1-Math.pow(1-k,3);
+        el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); };
+      requestAnimationFrame(step); };
+    const cio = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ up(e.target); cio.unobserve(e.target); } }); }, {threshold:0.6});
     counters.forEach(el=>cio.observe(el));
   }
 
-  /* ========== reduced-motion：モーション無し・状態だけ反映 ========== */
-  if (reduce){
-    let t=false;
-    const upd=()=>{ applyScroll(); t=false; };
-    const onScr=()=>{ if(!t){ t=true; requestAnimationFrame(upd); } };
-    addEventListener('scroll', onScr, {passive:true});
-    addEventListener('resize', onScr, {passive:true});
-    applyScroll();
-    return;
-  }
-
-  /* ---- 泡を生成 ---- */
-  {
-    const N = innerWidth < 700 ? 14 : 26;
-    for (let i=0;i<N;i++){
-      const b = document.createElement('span');
-      b.className = 'bubble';
-      const size = 4 + Math.round(((i*37)%10)/10*16);
-      const dur = 9 + (i*53)%12;
-      b.style.width = b.style.height = size+'px';
-      b.style.left = ((i*61)%100)+'%';
-      b.style.animationDuration = dur+'s';
-      b.style.animationDelay = (-(i*31)%dur)+'s';
-      b.style.setProperty('--drift', (((i%2)?1:-1) * (15+(i*13)%40))+'px');
-      bubbles.appendChild(b);
-    }
-  }
-
-  /* ========== マリンスノー canvas ========== */
-  const ctx = snow ? snow.getContext('2d') : null;
-  const ictx = ice ? ice.getContext('2d') : null;
-  let DPR = 1, cw = 0, parts = [], sprites = [], spriteGlow = null, iceParts = [], iceSprites = [];
-  const makeSprite = (coreStop, rgb) => {
-    const c0 = rgb ? `rgba(${rgb},0.95)` : 'rgba(224,242,252,0.95)';
-    const c1 = rgb ? `rgba(${rgb},0.4)`  : 'rgba(190,225,245,0.32)';
-    const c2 = rgb ? `rgba(${rgb},0)`    : 'rgba(190,225,245,0)';
-    const sz=32, r=sz/2, cv=document.createElement('canvas'); cv.width=cv.height=sz;
-    const c=cv.getContext('2d');
-    const g=c.createRadialGradient(r,r,0,r,r,r);
-    g.addColorStop(0,c0); g.addColorStop(coreStop,c1); g.addColorStop(1,c2);
-    c.fillStyle=g; c.beginPath(); c.arc(r,r,r,0,Math.PI*2); c.fill();
-    return cv;
-  };
-  const initParts = () => {
-    const count = innerWidth < 700 ? 45 : Math.round(clamp(innerWidth*innerHeight/14000, 70, 150));
-    parts = [];
-    for (let i=0;i<count;i++){
-      const z=Math.random();
-      parts.push({
-        x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
-        r:0.6 + z*z*3.2, vy:0.15 + z*0.7, ph:Math.random()*6.28,
-        a:0.06 + z*0.5, sp: z>0.66?sprites[0] : z>0.33?sprites[1] : sprites[2]
-      });
-    }
-    // 深海の生物発光（深いほど見える・ゆっくり脈動）
-    const gc = innerWidth<700 ? 6 : 12;
-    for (let i=0;i<gc;i++){
-      parts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z:0.5+Math.random()*0.5,
-        r:1.4+Math.random()*2.2, vy:0.08+Math.random()*0.22, ph:Math.random()*6.28,
-        a:0.5, glow:true, pulse:Math.random()*6.28, pa:1 });
-    }
-    parts.sort((m,n)=>m.z-n.z); // 遠→近
-  };
-  /* 氷塊スプライト：異なる意匠を混ぜる（結晶／氷塊ブロック／尖った破片／平たい氷片／ゴツゴツ塊） */
-  const iceMK = () => { const sz=76, cv=document.createElement('canvas'); cv.width=cv.height=sz; const c=cv.getContext('2d'); c.lineJoin='round'; c.lineCap='round'; return [cv,c,sz,sz/2,sz*0.4]; };
-  const icePoly = (c,pts)=>{ c.beginPath(); pts.forEach((p,i)=> i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1])); c.closePath(); };
-  const iceGrad = (c,m,R)=>{ const g=c.createLinearGradient(m,m-R,m,m+R); g.addColorStop(0,'rgba(233,246,254,0.92)'); g.addColorStop(0.55,'rgba(176,212,235,0.62)'); g.addColorStop(1,'rgba(112,163,200,0.42)'); return g; };
-  const I_RIM='rgba(250,253,255,0.72)', I_RIDGE='rgba(210,236,251,0.28)', I_SHA='rgba(24,66,100,0.42)', I_SHA2='rgba(24,66,100,0.28)', I_LIT='rgba(246,252,255,0.52)', I_LIT2='rgba(236,248,255,0.3)';
-  const iceFacetPoly = (c,m,R,P,n,extraLit) => {   // 多角形に受光/影ファセットと受光稜を付与（結晶/ゴツゴツ共用）
-    const apex=[m-R*0.14, m-R*0.08], lx=-0.5, ly=-0.86, lit=[];
-    for (let i=0;i<n;i++){ const a=P[i],b=P[(i+1)%n],mx=(a[0]+b[0])/2-m,my=(a[1]+b[1])/2-m,L=Math.hypot(mx,my)||1; lit.push([(mx/L)*(-lx)+(my/L)*(-ly),i]); }
-    lit.sort((u,v)=>v[0]-u[0]);
-    const F=(i,col)=>{ const a=P[i],b=P[(i+1)%n]; c.beginPath(); c.moveTo(apex[0],apex[1]); c.lineTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.closePath(); c.fillStyle=col; c.fill(); };
-    F(lit[0][1],I_LIT); F(lit[1][1],I_LIT2); if(extraLit) F(lit[2][1],I_LIT2);
-    F(lit[n-1][1],I_SHA); F(lit[n-2][1],I_SHA2);
-    c.strokeStyle=I_RIM; c.lineWidth=1.5; for(let k=0;k<2;k++){ const a=P[lit[k][1]],b=P[(lit[k][1]+1)%n]; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
-  };
-  // ① 結晶（不規則多角形）
-  const iceCrystal = () => {
-    const [cv,c,sz,m,R]=iceMK(); const n=6+((Math.random()*3)|0), P=[];
-    for(let i=0;i<n;i++){ const a=(i/n)*6.283+(Math.random()-0.5)*0.5, rr=R*(0.72+Math.random()*0.28); P.push([m+Math.cos(a)*rr, m+Math.sin(a)*rr]); }
-    icePoly(c,P); c.fillStyle=iceGrad(c,m,R); c.fill(); iceFacetPoly(c,m,R,P,n,false); return cv;
-  };
-  // ② ゴツゴツ塊（半径ばらつき大・角張る）
-  const iceJagged = () => {
-    const [cv,c,sz,m,R]=iceMK(); const n=8+((Math.random()*3)|0), P=[];
-    for(let i=0;i<n;i++){ const a=(i/n)*6.283+(Math.random()-0.5)*0.35, rr=R*(0.52+Math.random()*0.48); P.push([m+Math.cos(a)*rr, m+Math.sin(a)*rr]); }
-    icePoly(c,P); c.fillStyle=iceGrad(c,m,R); c.fill(); iceFacetPoly(c,m,R,P,n,true);
-    c.strokeStyle=I_RIDGE; c.lineWidth=0.7; icePoly(c,P); c.stroke(); return cv;
-  };
-  // ③ 尖った破片（縦長・中央稜で左右分割）
-  const iceShard = () => {
-    const [cv,c,sz,m,R]=iceMK();
-    const wl=R*(0.3+Math.random()*0.12), wr=R*(0.3+Math.random()*0.12), up=R*(0.95+Math.random()*0.08), dn=R*(0.85+Math.random()*0.15);
-    const tip=[m,m-up], L=[m-wl,m-R*0.1], R2=[m+wr,m-R*0.02], bot=[m+R*0.05,m+dn];
-    icePoly(c,[tip,R2,bot,L]); c.fillStyle=iceGrad(c,m,R); c.fill();
-    icePoly(c,[tip,L,bot]); c.fillStyle=I_LIT; c.fill();
-    icePoly(c,[tip,R2,bot]); c.fillStyle=I_SHA; c.fill();
-    c.strokeStyle=I_RIDGE; c.lineWidth=0.9; c.beginPath(); c.moveTo(tip[0],tip[1]); c.lineTo(bot[0],bot[1]); c.stroke();
-    c.strokeStyle=I_RIM; c.lineWidth=1.4; c.beginPath(); c.moveTo(tip[0],tip[1]); c.lineTo(L[0],L[1]); c.stroke(); return cv;
-  };
-  // ⑤ 平たい氷片（横長・薄い）
-  const iceFloe = () => {
-    const [cv,c,sz,m,R]=iceMK(); const n=6+((Math.random()*3)|0), P=[];
-    for(let i=0;i<n;i++){ const a=(i/n)*6.283+(Math.random()-0.5)*0.5, rr=R*(0.78+Math.random()*0.22); P.push([m+Math.cos(a)*rr, m+Math.sin(a)*rr*0.42]); }
-    icePoly(c,P); const g=c.createLinearGradient(m,m-R*0.42,m,m+R*0.42); g.addColorStop(0,'rgba(238,248,255,0.85)'); g.addColorStop(1,'rgba(116,166,202,0.5)'); c.fillStyle=g; c.fill();
-    icePoly(c,P); c.save(); c.clip(); c.fillStyle='rgba(24,66,100,0.2)'; c.fillRect(0,m+R*0.04,sz,sz); c.restore();   // 下側の影
-    let ti=0; for(let i=1;i<n;i++) if(P[i][1]<P[ti][1]) ti=i;                                                          // 上縁のハイライト
-    c.strokeStyle=I_RIM; c.lineWidth=1.5; const a=P[ti],b=P[(ti+1)%n]; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); return cv;
-  };
-  const iceBuilders = [iceCrystal, iceJagged, iceShard, iceFloe];
-  const initIce = () => {
-    const mob = innerWidth<700;
-    const count = mob ? 20 : Math.round(clamp(innerWidth*innerHeight/44000, 30, 56));
-    const rBase = mob ? 6 : 9, rSpan = mob ? 20 : 38;   // スマホは大きい氷塊を小さめに
-    iceParts=[];
-    for (let i=0;i<count;i++){
-      const z=Math.random();
-      iceParts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, z,
-        r:rBase+z*z*rSpan, vy:0.05+z*0.22, ph:Math.random()*6.28, sway:0.1+Math.random()*0.22,
-        rot:Math.random()*6.28, vr:(Math.random()*2-1)*0.0026, a:0.2+z*0.36,
-        rank:Math.random(), sp:iceSprites[(Math.random()*iceSprites.length)|0] });
-    }
-    iceParts.sort((m,n)=>m.z-n.z); // 遠→近
-  };
-  const resizeCanvas = () => {
-    DPR = Math.min(2, devicePixelRatio||1);
-    if (ctx){ snow.width=Math.round(innerWidth*DPR); snow.height=Math.round(innerHeight*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); }
-    if (ictx){ ice.width=Math.round(innerWidth*DPR); ice.height=Math.round(innerHeight*DPR); ictx.setTransform(DPR,0,0,DPR,0,0); }
-    if (innerWidth !== cw){ cw = innerWidth; if(ctx) initParts(); if(ictx) initIce(); }
-  };
-  if (ctx){ sprites=[makeSprite(0.5),makeSprite(0.32),makeSprite(0.18)]; spriteGlow=makeSprite(0.35,'127,230,255'); }
-  if (ictx){ iceSprites=[]; for(let i=0;i<3;i++) for(const b of iceBuilders) iceSprites.push(b()); }  // 各意匠3個ずつ混在（計15）
-  if (ctx||ictx) resizeCanvas();
-  const updateSnow = (dts, dy) => {
-    if (!ctx || fieldOpacity<=0.01) return;
-    const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
-    for (let i=0;i<parts.length;i++){
-      const q=parts[i];
-      q.y += q.vy*dts + stream*q.z*0.15;
-      q.x += Math.sin(q.ph += 0.01*dts)*0.25*dts;
-      if (q.glow){ q.pulse += 0.03*dts; q.pa = 0.35 + 0.65*(0.5+0.5*Math.sin(q.pulse)); }
-      if (q.y>H+20){ q.y=-20; q.x=Math.random()*W; }
-      else if (q.y<-20){ q.y=H+20; q.x=Math.random()*W; }
-    }
-  };
-  const drawSnow = () => {
-    if (!ctx) return;
-    ctx.clearRect(0,0,innerWidth,innerHeight);
-    if (fieldOpacity<=0.01) return;
-    for (let i=0;i<parts.length;i++){
-      const q=parts[i];
-      const ox=px*q.z*24, oy=py*q.z*24;
-      const sp = q.glow ? spriteGlow : q.sp;
-      const s = q.glow ? q.r*3 : q.r*2;
-      ctx.globalAlpha = q.glow ? q.a*q.pa : q.a;
-      ctx.drawImage(sp, (q.x+ox)-s, (q.y+oy)-s, s*2, s*2);
-    }
-    ctx.globalAlpha = 1;
-  };
-  const updateIce = (dts, dy) => {
-    if (!ictx) return;
-    const H=innerHeight, W=innerWidth, stream=clamp(dy,-60,60);
-    for (let i=0;i<iceParts.length;i++){
-      const q=iceParts[i];
-      q.y += q.vy*dts + stream*q.z*0.12;
-      q.x += Math.sin(q.ph += 0.006*dts)*q.sway*dts;
-      q.rot += q.vr*dts;
-      if (q.y>H+70){ q.y=-70; q.x=Math.random()*W; }
-      else if (q.y<-70){ q.y=H+70; q.x=Math.random()*W; }
-    }
-  };
-  const drawIce = () => {
-    if (!ictx) return;
-    ictx.clearRect(0,0,innerWidth,innerHeight);
-    if (iceField<=0.02) return;
-    for (let i=0;i<iceParts.length;i++){
-      const q=iceParts[i];
-      const vis = clamp((iceField - q.rank)*4, 0, 1);   // 深いほど数を減らす（rank でフェード間引き）
-      if (vis<=0) continue;
-      const ox=px*q.z*20, oy=py*q.z*20, s=q.r;
-      ictx.globalAlpha = q.a*(0.4+0.6*iceField)*vis;    // 深いほど暗く（薄く）
-      ictx.save(); ictx.translate(q.x+ox, q.y+oy); ictx.rotate(q.rot);
-      ictx.drawImage(q.sp, -s, -s, s*2, s*2); ictx.restore();
-    }
-    ictx.globalAlpha=1;
-  };
-
-  /* ========== 入力：ポインタ（PC） / ジャイロ（スマホ）========== */
-  if (matchMedia('(hover:hover) and (pointer:fine)').matches){
-    addEventListener('pointermove', (e)=>{
-      tpx = e.clientX/innerWidth*2 - 1;
-      tpy = e.clientY/innerHeight*2 - 1;
-    }, {passive:true});
-  }
-  // 光は全デバイスで指/カーソルに追従（回転なし）＋泡を放出
-  let lastBub=0;
-  addEventListener('pointermove', (e)=>{
-    tmx=e.clientX; tmy=e.clientY;
-    const now=performance.now();
-    if (now-lastBub>90){
-      lastBub=now;
-      const b=document.createElement('span'); b.className='cbub';
-      const s=4+Math.random()*7;
-      b.style.left=e.clientX+'px'; b.style.top=e.clientY+'px';
-      b.style.width=b.style.height=s+'px';
-      b.style.setProperty('--dx',((Math.random()*2-1)*20).toFixed(0)+'px');
-      document.body.appendChild(b);
-      b.addEventListener('animationend',()=>b.remove());
-    }
-  }, {passive:true});
-
-  /* ========== 単一アニメーションループ ========== */
-  let scrollDirty=true, lastY=scrollY, dive=0, lastT=performance.now(), rafId=0;
-  applyScroll();
-  addEventListener('scroll', ()=>{ scrollDirty=true; }, {passive:true});
-  addEventListener('resize', ()=>{ scrollDirty=true; resizeCanvas(); }, {passive:true});
-  const tick=(now)=>{
-    const dts = clamp((now-lastT)/16.67, 0, 3); lastT=now;
-    px = lerp(px, tpx, 0.08); py = lerp(py, tpy, 0.08);
-    root.style.setProperty('--px', px.toFixed(4));
-    root.style.setProperty('--py', py.toFixed(4));
-    mx = lerp(mx, tmx, 0.12); my = lerp(my, tmy, 0.12);   // 追従する光
-    root.style.setProperty('--mx', mx.toFixed(1)+'px');
-    root.style.setProperty('--my', my.toFixed(1)+'px');
-    const dy = scrollY-lastY; lastY=scrollY;
-    dive = lerp(dive, clamp(dy/4, -8, 8), 0.15);
-    if (sub) sub.style.setProperty('--dive', dive.toFixed(2));
-    if (scrollDirty){ applyScroll(); scrollDirty=false; }
-    updateSnow(dts, dy);
-    drawSnow();
-    updateIce(dts, dy);
-    drawIce();
-    rafId = requestAnimationFrame(tick);
-  };
-  rafId = requestAnimationFrame(tick);
-  document.addEventListener('visibilitychange', ()=>{
-    if (document.hidden){ cancelAnimationFrame(rafId); }
-    else { lastT=performance.now(); lastY=scrollY; rafId=requestAnimationFrame(tick); }
-  });
-
-  /* ========== カード 3D チルト（hover対応・PCのみ）========== */
-  if (matchMedia('(hover:hover) and (min-width:760px)').matches){
-    const cardsWrap=document.querySelector('.cards');
-    if (cardsWrap){
-      const rects=new WeakMap(); let stale=false;
-      addEventListener('scroll', ()=>{ stale=true; }, {passive:true});
-      addEventListener('resize', ()=>{ stale=true; }, {passive:true});
-      cardsWrap.addEventListener('pointermove', (e)=>{
-        const c=e.target.closest('.card'); if(!c) return;
-        let r=rects.get(c);
-        if (!r || stale){ r=c.getBoundingClientRect(); rects.set(c,r); stale=false; }
-        c.style.setProperty('--rx', ((e.clientX-r.left)/r.width  - 0.5).toFixed(3));
-        c.style.setProperty('--ry', ((e.clientY-r.top )/r.height - 0.5).toFixed(3));
-      }, {passive:true});
-    }
-  }
-
-  /* ハンバーガーメニュー（スマホ） */
+  /* ハンバーガーメニュー */
   const navToggle = document.getElementById('navToggle');
   if (navToggle && nav){
     const closeMenu = ()=>{ nav.classList.remove('open'); navToggle.setAttribute('aria-expanded','false'); };
