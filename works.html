@@ -54,7 +54,7 @@
 
 /* ============================ RESET ============================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
 body{
   font-family:"IBM Plex Sans JP",system-ui,sans-serif;
   color:var(--foam);
@@ -400,7 +400,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 .aerial-stage{perspective:680px;display:flex;justify-content:center}
 .aerial{display:block;width:min(470px,86vw);height:auto;aspect-ratio:640/860;max-height:82vh;overflow:visible;
   transform:rotateX(40deg) scale(1.02);transform-origin:50% 48%}
-@media(max-width:899px){.aerial-stage{margin-top:-11vh}.aerial{width:min(470px,94vw);transform:rotateX(40deg) scale(1.06)}}
+@media(max-width:899px){.aerial-stage{margin-top:-11vh;overflow-x:clip}.aerial{width:min(470px,100%);transform:rotateX(40deg) scale(1.04)}}
 
 /* 俯瞰の氷山・ラベル */
 .berg-a{cursor:pointer}
@@ -565,8 +565,7 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
         <g transform="translate(-470 90) scale(.85)"><ellipse cx="876" cy="236" rx="18" ry="12" fill="url(#halo2)"/><polygon points="870,238 875,224 873,239" fill="#ffffff"/><polygon points="873,239 875,224 882,232" fill="#dcebf3"/><polygon points="873,239 882,232 880,239" fill="#cadfe9"/></g>
 
         <!-- 奥の氷山 → PRODUCT -->
-        <a class="berg-a" href="#product" aria-label="自社プロダクト 現金出納帳Pro へ移動">
-          <rect class="hit" x="372" y="140" width="220" height="150" fill="transparent"/>
+        <g>
           <g transform="translate(-182 -146) scale(.78)">
             <ellipse cx="774" cy="452" rx="114" ry="74" fill="url(#halo2)" transform="rotate(-8 774 452)"/>
             <ellipse cx="782" cy="472" rx="68" ry="40" fill="#5fbdd3" opacity=".3" transform="rotate(6 782 472)" filter="url(#soft)"/>
@@ -583,7 +582,7 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
           <text class="berg-sub" x="466" y="192">現金出納帳Pro</text>
           <polyline points="462,180 438,180 424,194" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
           <rect x="421" y="191" width="6" height="6" transform="rotate(45 424 194)" fill="#06283d" opacity=".55"/>
-        </a>
+        </g>
 
         <!-- 装飾の氷山（中景・左） -->
         <g transform="translate(-283 92) scale(.58)">
@@ -612,8 +611,7 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
         </g>
 
         <!-- 手前の氷山 → CASE 01 -->
-        <a class="berg-a" href="#case-01" aria-label="CASE 01 警備業の事例へ移動">
-          <rect class="hit" x="30" y="505" width="400" height="340" fill="transparent"/>
+        <g>
           <g transform="translate(-125 233) scale(1.28)">
             <ellipse cx="334" cy="318" rx="194" ry="126" fill="url(#halo1)" transform="rotate(-10 334 318)"/>
             <ellipse cx="344" cy="348" rx="120" ry="70" fill="#5fbdd3" opacity=".34" transform="rotate(7 344 348)" filter="url(#soft)"/>
@@ -632,7 +630,7 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
           <text class="berg-sub" x="52" y="634">警備業</text>
           <polyline points="168,622 214,622 250,592" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
           <rect x="247" y="589" width="6" height="6" transform="rotate(45 250 592)" fill="#06283d" opacity=".55"/>
-        </a>
+        </g>
       </svg>
     </div>
   </section>
