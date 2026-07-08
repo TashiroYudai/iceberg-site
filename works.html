@@ -399,7 +399,10 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 .aerial{display:block;margin:0 auto;width:min(1000px,94vw);height:auto;aspect-ratio:1000/620;max-height:64vh;overflow:visible;
   transform:rotateX(42deg) scale(1.2);transform-origin:50% 60%;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 44%,#000 56%,transparent 99%);mask-image:radial-gradient(120% 100% at 50% 44%,#000 56%,transparent 99%)}
-@media(max-width:700px){.aerial{transform:rotateX(42deg) scale(1.03)}}
+@media(max-width:700px){
+  .works-hero{padding-top:clamp(72px,9vh,90px);gap:clamp(4px,1vh,10px);padding-bottom:0}
+  .aerial{width:min(1100px,142vw);max-height:none;transform:translateY(-11%) rotateX(42deg) scale(1.56);transform-origin:50% 50%}
+}
 
 /* 俯瞰の氷山・ラベル */
 .berg-a{cursor:pointer}
