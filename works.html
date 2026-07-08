@@ -387,27 +387,25 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 :focus-visible{outline:2px solid var(--lumen);outline-offset:3px;border-radius:4px}
 
 /* ===================== WORKS（実績・俯瞰版） ===================== */
-/* HERO：俯瞰ステージ（自分専用のビューポート→テキストは以降） */
-.works-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;
-  gap:clamp(10px,2vh,20px);padding-top:clamp(88px,11vh,116px);padding-bottom:24px;color:var(--ink)}
-.works-hero h1{font-size:clamp(1.9rem,5.4vw,3.4rem);color:var(--ink);line-height:1.32}
+/* HERO：2カラム（PC=左コピー/右イラスト縦向き、SP=タイトル下に縦向き） */
+.works-hero{min-height:100svh;display:grid;align-items:center;gap:clamp(6px,1.4vw,40px);
+  grid-template-columns:1fr;max-width:var(--maxw);margin:0 auto;
+  padding:clamp(84px,11vh,116px) clamp(18px,5vw,52px) 24px;color:var(--ink)}
+@media(min-width:900px){.works-hero{grid-template-columns:1.04fr .96fr}}
+@media(max-width:899px){.works-hero{align-content:start;gap:clamp(0px,.5vh,8px)}}
+.works-hero h1{font-size:clamp(2rem,5.4vw,3.4rem);color:var(--ink);line-height:1.32}
 .works-hero h1 .em{background:linear-gradient(transparent 68%, rgba(116,185,216,.5) 68%)}
-.works-hero .lead{color:var(--ink-dim)}
-.works-hero .scrollcue{color:var(--ink)}
-.aerial-copy{width:100%}
-.aerial-stage{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:0;perspective:1150px}
-.aerial{display:block;margin:0 auto;width:min(1000px,94vw);height:auto;aspect-ratio:1000/620;max-height:64vh;overflow:visible;
-  transform:rotateX(42deg) scale(1.2);transform-origin:50% 60%;
-  -webkit-mask-image:radial-gradient(120% 100% at 50% 44%,#000 56%,transparent 99%);mask-image:radial-gradient(120% 100% at 50% 44%,#000 56%,transparent 99%)}
-@media(max-width:700px){
-  .works-hero{padding-top:clamp(72px,9vh,90px);gap:clamp(4px,1vh,10px);padding-bottom:0}
-  .aerial{width:min(1100px,142vw);max-height:none;transform:translateY(-11%) rotateX(42deg) scale(1.56);transform-origin:50% 50%}
-}
+.works-hero .lead{color:var(--ink-dim);max-width:42ch}
+.aerial-copy{max-width:560px}
+.aerial-stage{perspective:1200px;display:flex;justify-content:center}
+.aerial{display:block;width:min(440px,82vw);height:auto;aspect-ratio:640/720;max-height:76vh;overflow:visible;
+  transform:rotateX(40deg) scale(1.05);transform-origin:50% 46%}
+@media(max-width:899px){.aerial-stage{margin-top:-10vh}.aerial{width:min(440px,90vw);transform:rotateX(40deg) scale(1.12)}}
 
 /* 俯瞰の氷山・ラベル */
 .berg-a{cursor:pointer}
-.berg-lbl{font-family:"IBM Plex Mono",monospace;font-size:16px;letter-spacing:.14em;font-weight:600;fill:var(--ink)}
-.berg-sub{font-family:"IBM Plex Sans JP",sans-serif;font-size:13.5px;fill:var(--ink-dim)}
+.berg-lbl{font-family:"IBM Plex Mono",monospace;font-size:18px;letter-spacing:.14em;font-weight:600;fill:var(--ink)}
+.berg-sub{font-family:"IBM Plex Sans JP",sans-serif;font-size:14px;fill:var(--ink-dim)}
 .berg-a:hover .berg-lbl{fill:var(--tide)}
 .berg-a:focus{outline:none}
 .berg-a:focus-visible .hit{stroke:var(--tide);stroke-opacity:.8;stroke-width:2}
@@ -522,130 +520,92 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
 
 <main>
 
-  <!-- ===================== HERO / CHART・俯瞰 ===================== -->
+  <!-- ===================== HERO / CHART・俯瞰（縦・2カラム） ===================== -->
   <section class="hero works-hero" id="top">
-    <div class="wrap aerial-copy">
+    <div class="aerial-copy">
       <span class="eyebrow">CHART · 実績</span>
       <h1 style="margin-top:16px"><span class="line l1">水面に見えるのは、</span><br><span class="em line l2">氷山の頂だけ。</span></h1>
-      <p class="lead" style="max-width:46ch">上空から見た、課題の海。白い頂は見えている作業、その下に広がる大きな影が「水面下の本当の課題」です。氷山を選ぶと、その事例へ。</p>
-      <a class="scrollcue" href="#cases"><span class="dive" aria-hidden="true"></span> 実績を見る</a>
+      <p class="lead">上空から見た、課題の海。白い頂は見えている作業、その下に広がる大きな影が「水面下の本当の課題」です。氷山を選ぶと、その事例へ。</p>
     </div>
     <div class="aerial-stage">
-      <svg class="aerial" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="aerialTitle aerialDesc">
+      <svg class="aerial" viewBox="0 0 640 720" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="aerialTitle aerialDesc">
         <title id="aerialTitle">氷山原の俯瞰図</title>
-        <desc id="aerialDesc">上空から見下ろした海。氷山の白い頂と、その下に透ける大きな影＝水面下の課題。各氷山は事例へのリンクです。</desc>
+        <desc id="aerialDesc">上空から見下ろした海。手前の大きな氷山が顧客事例、奥の氷山が自社プロダクト。白い頂の下に透ける影が水面下の課題です。各氷山は事例へのリンクです。</desc>
         <defs>
           <radialGradient id="halo1" cx=".5" cy=".5" r=".5">
-            <stop offset="0" stop-color="#a8e6ef" stop-opacity=".95"/>
-            <stop offset=".45" stop-color="#7fd2e2" stop-opacity=".6"/>
-            <stop offset="1" stop-color="#5fb9cf" stop-opacity="0"/>
+            <stop offset="0" stop-color="#a8e6ef" stop-opacity=".95"/><stop offset=".45" stop-color="#7fd2e2" stop-opacity=".6"/><stop offset="1" stop-color="#5fb9cf" stop-opacity="0"/>
           </radialGradient>
           <radialGradient id="halo2" cx=".5" cy=".5" r=".5">
-            <stop offset="0" stop-color="#b3e9f1" stop-opacity=".9"/>
-            <stop offset=".5" stop-color="#84d4e3" stop-opacity=".5"/>
-            <stop offset="1" stop-color="#5fb9cf" stop-opacity="0"/>
+            <stop offset="0" stop-color="#b3e9f1" stop-opacity=".9"/><stop offset=".5" stop-color="#84d4e3" stop-opacity=".5"/><stop offset="1" stop-color="#5fb9cf" stop-opacity="0"/>
           </radialGradient>
           <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-          <radialGradient id="gridFade" gradientUnits="userSpaceOnUse" cx="500" cy="436" r="540">
-            <stop offset="0" stop-color="#fff"/><stop offset=".46" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+          <radialGradient id="gridFade" gradientUnits="userSpaceOnUse" cx="320" cy="420" r="430">
+            <stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
           </radialGradient>
-          <mask id="gmask" maskUnits="userSpaceOnUse" x="-320" y="-320" width="1640" height="1360">
-            <rect x="-320" y="-320" width="1640" height="1360" fill="url(#gridFade)"/>
-          </mask>
+          <mask id="gmask" maskUnits="userSpaceOnUse" x="-260" y="-260" width="1160" height="1340"><rect x="-260" y="-260" width="1160" height="1340" fill="url(#gridFade)"/></mask>
         </defs>
 
-        <!-- 俯瞰グリッド（四方へ延長し放射状フェード・外周の縁なし） -->
+        <!-- グリッド（縦・四方フェード） -->
         <g mask="url(#gmask)" stroke="#06283d" stroke-opacity=".07" stroke-width="1">
-          <line x1="-200" y1="-260" x2="-200" y2="880"/><line x1="-100" y1="-260" x2="-100" y2="880"/><line x1="0" y1="-260" x2="0" y2="880"/><line x1="100" y1="-260" x2="100" y2="880"/><line x1="200" y1="-260" x2="200" y2="880"/><line x1="300" y1="-260" x2="300" y2="880"/><line x1="400" y1="-260" x2="400" y2="880"/><line x1="500" y1="-260" x2="500" y2="880"/><line x1="600" y1="-260" x2="600" y2="880"/><line x1="700" y1="-260" x2="700" y2="880"/><line x1="800" y1="-260" x2="800" y2="880"/><line x1="900" y1="-260" x2="900" y2="880"/><line x1="1000" y1="-260" x2="1000" y2="880"/><line x1="1100" y1="-260" x2="1100" y2="880"/><line x1="1200" y1="-260" x2="1200" y2="880"/>
-          <line x1="-200" y1="-240" x2="1200" y2="-240"/><line x1="-200" y1="-160" x2="1200" y2="-160"/><line x1="-200" y1="-80" x2="1200" y2="-80"/><line x1="-200" y1="0" x2="1200" y2="0"/><line x1="-200" y1="80" x2="1200" y2="80"/><line x1="-200" y1="160" x2="1200" y2="160"/><line x1="-200" y1="240" x2="1200" y2="240"/><line x1="-200" y1="320" x2="1200" y2="320"/><line x1="-200" y1="400" x2="1200" y2="400"/><line x1="-200" y1="480" x2="1200" y2="480"/><line x1="-200" y1="560" x2="1200" y2="560"/><line x1="-200" y1="640" x2="1200" y2="640"/><line x1="-200" y1="720" x2="1200" y2="720"/><line x1="-200" y1="800" x2="1200" y2="800"/>
+          <line x1="-160" y1="-220" x2="-160" y2="1060"/><line x1="-80" y1="-220" x2="-80" y2="1060"/><line x1="0" y1="-220" x2="0" y2="1060"/><line x1="80" y1="-220" x2="80" y2="1060"/><line x1="160" y1="-220" x2="160" y2="1060"/><line x1="240" y1="-220" x2="240" y2="1060"/><line x1="320" y1="-220" x2="320" y2="1060"/><line x1="400" y1="-220" x2="400" y2="1060"/><line x1="480" y1="-220" x2="480" y2="1060"/><line x1="560" y1="-220" x2="560" y2="1060"/><line x1="640" y1="-220" x2="640" y2="1060"/><line x1="720" y1="-220" x2="720" y2="1060"/><line x1="800" y1="-220" x2="800" y2="1060"/>
+          <line x1="-200" y1="-160" x2="840" y2="-160"/><line x1="-200" y1="-80" x2="840" y2="-80"/><line x1="-200" y1="0" x2="840" y2="0"/><line x1="-200" y1="80" x2="840" y2="80"/><line x1="-200" y1="160" x2="840" y2="160"/><line x1="-200" y1="240" x2="840" y2="240"/><line x1="-200" y1="320" x2="840" y2="320"/><line x1="-200" y1="400" x2="840" y2="400"/><line x1="-200" y1="480" x2="840" y2="480"/><line x1="-200" y1="560" x2="840" y2="560"/><line x1="-200" y1="640" x2="840" y2="640"/><line x1="-200" y1="720" x2="840" y2="720"/><line x1="-200" y1="800" x2="840" y2="800"/><line x1="-200" y1="880" x2="840" y2="880"/><line x1="-200" y1="960" x2="840" y2="960"/>
         </g>
         <g fill="#1f6f96" font-family="'IBM Plex Mono',monospace" font-size="12" letter-spacing=".08em" mask="url(#gmask)">
-          <text x="118" y="146" fill-opacity=".32">312</text><text x="556" y="226" fill-opacity=".32">78</text><text x="708" y="556" fill-opacity=".32">140</text><text x="446" y="466" fill-opacity=".32">205</text>
+          <text x="80" y="440" fill-opacity=".3">312</text><text x="500" y="400" fill-opacity=".3">78</text><text x="470" y="600" fill-opacity=".3">140</text><text x="110" y="660" fill-opacity=".3">205</text>
         </g>
-        <!-- 海面の細かなきらめき（中央寄り・端はマスクでフェード） -->
         <g stroke="#ffffff" stroke-opacity=".4" stroke-width="1.1" fill="none" stroke-linecap="round" mask="url(#gmask)">
-          <path d="M520 300 q 8 -3 16 0"/><path d="M672 340 q 9 -3 18 0"/><path d="M420 400 q 8 -3 16 0"/><path d="M600 460 q 9 -3 18 0"/>
+          <path d="M300 470 q 8 -3 16 0"/><path d="M410 300 q 8 -3 16 0"/><path d="M250 560 q 8 -3 16 0"/>
         </g>
-        <!-- 外洋の深みのむら -->
         <g fill="#5fbdd3" filter="url(#soft)" mask="url(#gmask)">
-          <ellipse cx="620" cy="505" rx="130" ry="54" opacity=".10"/>
-          <ellipse cx="520" cy="360" rx="90" ry="36" opacity=".07"/>
+          <ellipse cx="300" cy="520" rx="120" ry="50" opacity=".10"/><ellipse cx="410" cy="300" rx="80" ry="34" opacity=".07"/>
         </g>
 
-        <!-- 小さな無名の氷片（風景の密度・立体） -->
-        <g>
-          <ellipse cx="598" cy="152" rx="26" ry="18" fill="url(#halo2)"/>
-          <ellipse cx="603" cy="156" rx="10" ry="4" fill="#17506e" opacity=".15" filter="url(#soft)"/>
-          <polygon points="588,154 597,134 593,157" fill="#ffffff"/>
-          <polygon points="593,157 597,134 606,146" fill="#e0edf4"/>
-          <polygon points="593,157 606,146 604,157" fill="#c8dde9"/>
-        </g>
-        <g>
-          <ellipse cx="172" cy="518" rx="22" ry="15" fill="url(#halo2)"/>
-          <ellipse cx="176" cy="521" rx="8" ry="3.5" fill="#17506e" opacity=".15" filter="url(#soft)"/>
-          <polygon points="164,520 171,504 168,522" fill="#ffffff"/>
-          <polygon points="168,522 171,504 179,514" fill="#dfecf3"/>
-          <polygon points="168,522 179,514 177,522" fill="#c9dee9"/>
-        </g>
-        <g>
-          <ellipse cx="876" cy="236" rx="18" ry="12" fill="url(#halo2)"/>
-          <polygon points="870,238 875,224 873,239" fill="#ffffff"/>
-          <polygon points="873,239 875,224 882,232" fill="#dcebf3"/>
-          <polygon points="873,239 882,232 880,239" fill="#cadfe9"/>
-        </g>
+        <!-- 小さな氷片 -->
+        <g transform="translate(90 250) scale(.9)"><ellipse cx="598" cy="152" rx="26" ry="18" fill="url(#halo2)"/><polygon points="588,154 597,134 593,157" fill="#ffffff"/><polygon points="593,157 597,134 606,146" fill="#e0edf4"/><polygon points="593,157 606,146 604,157" fill="#c8dde9"/></g>
+        <g transform="translate(-470 90) scale(.85)"><ellipse cx="876" cy="236" rx="18" ry="12" fill="url(#halo2)"/><polygon points="870,238 875,224 873,239" fill="#ffffff"/><polygon points="873,239 875,224 882,232" fill="#dcebf3"/><polygon points="873,239 882,232 880,239" fill="#cadfe9"/></g>
 
-        <!-- ICEBERG 1 → CASE 01（主役・双峰の立体） -->
-        <a class="berg-a" href="#case-01" aria-label="CASE 01 警備業の事例へ移動">
-          <rect class="hit" x="182" y="166" width="240" height="200" fill="transparent"/>
-          <circle cx="332" cy="304" r="124" fill="none" stroke="#1f6f96" stroke-opacity=".12" stroke-dasharray="3 9"/>
-          <ellipse cx="334" cy="318" rx="194" ry="126" fill="url(#halo1)" transform="rotate(-10 334 318)"/>
-          <ellipse cx="344" cy="348" rx="120" ry="70" fill="#5fbdd3" opacity=".34" transform="rotate(7 344 348)" filter="url(#soft)"/>
-          <ellipse cx="310" cy="300" rx="70" ry="44" fill="#8fdbe8" opacity=".45" filter="url(#soft)"/>
-          <ellipse cx="372" cy="328" rx="74" ry="19" fill="#17506e" opacity=".16" filter="url(#soft)"/>
-          <ellipse cx="332" cy="312" rx="92" ry="27" fill="none" stroke="#ffffff" stroke-opacity=".38" stroke-width="1.1"/>
-          <ellipse cx="332" cy="313" rx="120" ry="36" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="1"/>
-          <ellipse cx="331" cy="312" rx="72" ry="15" fill="#ffffff" opacity=".45"/>
-          <g stroke="#ffffff" stroke-opacity=".4" stroke-width=".6" stroke-linejoin="round">
-            <polygon points="264,306 314,232 292,322" fill="#ffffff"/>
-            <polygon points="292,322 314,232 322,330" fill="#eef6fa"/>
-            <polygon points="322,330 314,232 346,258" fill="#dcebf3"/>
-            <polygon points="322,330 346,258 362,324" fill="#c3d9e6"/>
-            <polygon points="362,324 346,258 370,250" fill="#d8e8f1"/>
-            <polygon points="362,324 370,250 398,298" fill="#cfe2ed"/>
-            <polygon points="314,232 330,240 346,258" fill="#f8fcfe"/>
+        <!-- 奥の氷山 → PRODUCT -->
+        <a class="berg-a" href="#product" aria-label="自社プロダクト 現金出納帳Pro へ移動">
+          <rect class="hit" x="360" y="150" width="230" height="150" fill="transparent"/>
+          <g transform="translate(-223 -150) scale(.82)">
+            <ellipse cx="774" cy="452" rx="114" ry="74" fill="url(#halo2)" transform="rotate(-8 774 452)"/>
+            <ellipse cx="782" cy="472" rx="68" ry="40" fill="#5fbdd3" opacity=".3" transform="rotate(6 782 472)" filter="url(#soft)"/>
+            <ellipse cx="758" cy="440" rx="42" ry="26" fill="#8fdbe8" opacity=".42" filter="url(#soft)"/>
+            <ellipse cx="796" cy="458" rx="44" ry="12" fill="#17506e" opacity=".15" filter="url(#soft)"/>
+            <ellipse cx="771" cy="450" rx="52" ry="15" fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="1"/>
+            <ellipse cx="771" cy="449" rx="42" ry="9" fill="#ffffff" opacity=".45"/>
+            <g stroke="#ffffff" stroke-opacity=".4" stroke-width=".5" stroke-linejoin="round">
+              <polygon points="736,448 766,398 756,460" fill="#ffffff"/><polygon points="756,460 766,398 786,414" fill="#e4f0f6"/><polygon points="756,460 786,414 782,458" fill="#c8dde9"/><polygon points="782,458 786,414 804,442" fill="#d5e5ee"/>
+            </g>
+            <line x1="736" y1="448" x2="766" y2="398" stroke="#ffffff" stroke-width="1.2" opacity=".9"/>
           </g>
-          <line x1="264" y1="306" x2="314" y2="232" stroke="#ffffff" stroke-width="1.5" opacity=".95"/>
-          <line x1="314" y1="232" x2="346" y2="258" stroke="#ffffff" stroke-width="1" opacity=".8"/>
-          <line x1="346" y1="258" x2="370" y2="250" stroke="#ffffff" stroke-width="1" opacity=".7"/>
-          <text class="berg-lbl" x="188" y="178">CASE 01</text>
-          <text class="berg-sub" x="188" y="200">警備業</text>
-          <polyline points="226,212 260,212 296,252" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
-          <rect x="293" y="249" width="6" height="6" transform="rotate(45 296 252)" fill="#06283d" opacity=".55"/>
+          <text class="berg-lbl" x="458" y="176">PRODUCT</text>
+          <text class="berg-sub" x="458" y="198">現金出納帳Pro</text>
+          <polyline points="454,186 424,186 406,200" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
+          <rect x="403" y="197" width="6" height="6" transform="rotate(45 406 200)" fill="#06283d" opacity=".55"/>
         </a>
 
-        <!-- ICEBERG 2 → PRODUCT（脇役・立体） -->
-        <a class="berg-a" href="#product" aria-label="自社プロダクト 現金出納帳Pro へ移動" transform="translate(-26,-4)">
-          <rect class="hit" x="700" y="330" width="210" height="150" fill="transparent"/>
-          <circle cx="772" cy="444" r="82" fill="none" stroke="#1f6f96" stroke-opacity=".11" stroke-dasharray="3 9"/>
-          <ellipse cx="774" cy="452" rx="114" ry="74" fill="url(#halo2)" transform="rotate(-8 774 452)"/>
-          <ellipse cx="782" cy="472" rx="68" ry="40" fill="#5fbdd3" opacity=".3" transform="rotate(6 782 472)" filter="url(#soft)"/>
-          <ellipse cx="758" cy="440" rx="42" ry="26" fill="#8fdbe8" opacity=".42" filter="url(#soft)"/>
-          <ellipse cx="796" cy="458" rx="44" ry="12" fill="#17506e" opacity=".15" filter="url(#soft)"/>
-          <ellipse cx="771" cy="450" rx="52" ry="15" fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="1"/>
-          <ellipse cx="771" cy="450" rx="70" ry="21" fill="none" stroke="#ffffff" stroke-opacity=".16" stroke-width="1"/>
-          <ellipse cx="771" cy="449" rx="42" ry="9" fill="#ffffff" opacity=".45"/>
-          <g stroke="#ffffff" stroke-opacity=".4" stroke-width=".5" stroke-linejoin="round">
-            <polygon points="736,448 766,398 756,460" fill="#ffffff"/>
-            <polygon points="756,460 766,398 786,414" fill="#e4f0f6"/>
-            <polygon points="756,460 786,414 782,458" fill="#c8dde9"/>
-            <polygon points="782,458 786,414 804,442" fill="#d5e5ee"/>
+        <!-- 手前の氷山 → CASE 01 -->
+        <a class="berg-a" href="#case-01" aria-label="CASE 01 警備業の事例へ移動">
+          <rect class="hit" x="40" y="330" width="380" height="300" fill="transparent"/>
+          <g transform="translate(-132 40) scale(1.3)">
+            <ellipse cx="334" cy="318" rx="194" ry="126" fill="url(#halo1)" transform="rotate(-10 334 318)"/>
+            <ellipse cx="344" cy="348" rx="120" ry="70" fill="#5fbdd3" opacity=".34" transform="rotate(7 344 348)" filter="url(#soft)"/>
+            <ellipse cx="310" cy="300" rx="70" ry="44" fill="#8fdbe8" opacity=".45" filter="url(#soft)"/>
+            <ellipse cx="372" cy="328" rx="74" ry="19" fill="#17506e" opacity=".16" filter="url(#soft)"/>
+            <ellipse cx="332" cy="312" rx="92" ry="27" fill="none" stroke="#ffffff" stroke-opacity=".38" stroke-width="1.1"/>
+            <ellipse cx="332" cy="313" rx="120" ry="36" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="1"/>
+            <ellipse cx="331" cy="312" rx="72" ry="15" fill="#ffffff" opacity=".45"/>
+            <g stroke="#ffffff" stroke-opacity=".4" stroke-width=".6" stroke-linejoin="round">
+              <polygon points="264,306 314,232 292,322" fill="#ffffff"/><polygon points="292,322 314,232 322,330" fill="#eef6fa"/><polygon points="322,330 314,232 346,258" fill="#dcebf3"/><polygon points="322,330 346,258 362,324" fill="#c3d9e6"/><polygon points="362,324 346,258 370,250" fill="#d8e8f1"/><polygon points="362,324 370,250 398,298" fill="#cfe2ed"/><polygon points="314,232 330,240 346,258" fill="#f8fcfe"/>
+            </g>
+            <line x1="264" y1="306" x2="314" y2="232" stroke="#ffffff" stroke-width="1.5" opacity=".95"/>
+            <line x1="314" y1="232" x2="346" y2="258" stroke="#ffffff" stroke-width="1" opacity=".8"/>
           </g>
-          <line x1="736" y1="448" x2="766" y2="398" stroke="#ffffff" stroke-width="1.2" opacity=".9"/>
-          <line x1="766" y1="398" x2="786" y2="414" stroke="#ffffff" stroke-width=".9" opacity=".7"/>
-          <text class="berg-lbl" x="824" y="348">PRODUCT</text>
-          <text class="berg-sub" x="824" y="370">現金出納帳Pro</text>
-          <polyline points="838,380 810,380 788,410" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
-          <rect x="785" y="407" width="6" height="6" transform="rotate(45 788 410)" fill="#06283d" opacity=".55"/>
+          <text class="berg-lbl" x="60" y="498">CASE 01</text>
+          <text class="berg-sub" x="60" y="520">警備業</text>
+          <polyline points="176,508 216,508 252,478" fill="none" stroke="#06283d" stroke-opacity=".32" stroke-width="1"/>
+          <rect x="249" y="475" width="6" height="6" transform="rotate(45 252 478)" fill="#06283d" opacity=".55"/>
         </a>
       </svg>
     </div>
