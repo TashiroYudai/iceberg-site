@@ -389,9 +389,9 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 /* ===================== WORKS（実績・俯瞰版） ===================== */
 /* HERO：2カラム（PC=左コピー/右イラスト縦向き、SP=タイトル下に縦向き） */
 .works-hero{position:relative;display:block;min-height:100svh;overflow:hidden;isolation:isolate;padding:0;color:var(--ink)}
-.works-hero .scene{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
-.works-hero .hero-scrim{position:absolute;inset:0;z-index:-1;background:radial-gradient(88% 54% at 10% 24%,rgba(233,244,250,.9) 0%,rgba(233,244,250,.5) 38%,rgba(233,244,250,0) 66%)}
-.works-hero .hero-inner{max-width:var(--maxw);margin:0 auto;padding:clamp(96px,15vh,168px) clamp(18px,5vw,52px) 40px}
+.works-hero .scene{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
+.works-hero .hero-scrim{position:absolute;inset:0;z-index:1;background:radial-gradient(88% 54% at 10% 24%,rgba(233,244,250,.9) 0%,rgba(233,244,250,.5) 38%,rgba(233,244,250,0) 66%)}
+.works-hero .hero-inner{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:clamp(96px,15vh,168px) clamp(18px,5vw,52px) 40px}
 .works-hero h1{font-size:clamp(2rem,4.6vw,3.2rem);color:var(--ink);line-height:1.3}
 .works-hero h1 .em{background:linear-gradient(transparent 68%, rgba(116,185,216,.5) 68%)}
 .works-hero .lead{color:#173f59;max-width:34ch}
@@ -443,7 +443,11 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 /* ===================== ライトテーマ上書き（空撮・白系） ===================== */
 :root{--ink-dim:#35637f}
 body{color:var(--ink);background:var(--sky)}
-#sea{background:linear-gradient(180deg,#cfe7f3 0%,#e0f0f7 55%,#eef7fb 100%)}
+/* Light page backdrop: on <body> (not a fixed #sea div) so it composites through
+   the hero scene IDENTICALLY in WebKit(Safari/iPhone) and Chromium. A fixed #sea
+   div bled inconsistently — pale on Chrome, dark navy on iOS Safari. */
+#sea{display:none}
+body{background:linear-gradient(180deg,#cfe7f3 0%,#e0f0f7 55%,#eef7fb 100%);background-attachment:fixed}
 ::selection{background:var(--tide);color:#fff}
 :focus-visible{outline-color:var(--tide)}
 #progress{background:linear-gradient(90deg,var(--tide),var(--lumen-soft));box-shadow:0 0 12px rgba(31,111,150,.4)}
