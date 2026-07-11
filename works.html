@@ -439,6 +439,28 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 .product-cta{flex:0 0 auto}
 .rank-badge{display:inline-block;margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;padding:7px 13px;border-radius:999px;background:rgba(127,230,255,.1);border:1px solid rgba(127,230,255,.3);color:var(--foam-dim)}
 .rank-badge b{color:var(--lumen);font-weight:600}
+/* Before/After bar comparison (case result) */
+.ba{margin:18px 0 2px;display:grid;gap:10px;max-width:440px}
+.ba-row{display:grid;grid-template-columns:58px 1fr auto;align-items:center;gap:12px}
+.ba-k{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;color:var(--ink-dim)}
+.ba-k.a{color:var(--tide);font-weight:600}
+.ba-track{height:12px;border-radius:999px;background:rgba(31,111,150,.1);overflow:hidden}
+.ba-fill{display:block;height:100%;border-radius:999px;transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease) .1s}
+.ba-fill.b{background:#b3c6d3}
+.ba-fill.a{background:linear-gradient(90deg,var(--tide),var(--glacier))}
+.reveal.in .ba-fill{transform:scaleX(1)}
+.ba-v{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:700;font-size:1.02rem;color:var(--ink);white-space:nowrap}
+.ba-v small{font-family:"IBM Plex Sans JP",sans-serif;font-weight:400;font-size:.6em;color:var(--ink-dim);margin-left:1px}
+.ba-v.a{color:var(--tide)}
+/* App Store-style ranking badge card */
+.rankcard{display:inline-flex;align-items:center;gap:13px;margin-top:16px;padding:11px 17px 11px 15px;border-radius:15px;background:linear-gradient(135deg,rgba(31,111,150,.08),rgba(116,185,216,.11));border:1px solid rgba(31,111,150,.24);box-shadow:0 8px 24px -16px rgba(6,40,61,.35)}
+.rankcard-ic{width:30px;height:30px;flex:none;color:var(--tide)}
+.rankcard-txt{display:flex;flex-direction:column;line-height:1.15;gap:2px}
+.rankcard-cat{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.05em;color:var(--ink-dim)}
+.rankcard-pos{font-family:"Zen Kaku Gothic New",sans-serif;color:var(--ink);font-weight:700;font-size:.9rem;display:flex;align-items:baseline;gap:5px}
+.rankcard-pos b{font-size:.72em;color:var(--tide);font-weight:600}
+.rankcard-pos strong{font-size:1.75em;font-weight:900;background:linear-gradient(180deg,var(--tide),var(--glacier));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+.rankcard-date{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--ink-dim);opacity:.8}
 
 /* ===================== ライトテーマ上書き（空撮・白系） ===================== */
 :root{--ink-dim:#35637f}
@@ -565,7 +587,7 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
 
           <ol class="case-steps">
             <li class="step"><span class="k">声</span>
-              <p>「毎日の入力に20分、月末の請求書づくりに30分かかっていた」<span class="note">※匿名事例のため、代表的なご相談として記載しています。</span></p></li>
+              <p>「毎日の入力に20分、月末の請求書づくりに30分かかっていた」</p></li>
             <li class="step"><span class="k">深掘り</span>
               <p>使っているエクセル5つを全部見せてもらい、どこで同じ数字を打ち直しているかを追いました。</p></li>
             <li class="step"><span class="k">本質課題</span>
@@ -577,6 +599,10 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
           <div class="case-result">
             <span class="case-mlabel">結果 — 事務作業</span>
             <div class="case-num"><span class="u">約</span><span class="count" data-to="75" data-suf="">75</span><span class="u">%</span><span class="u">削減</span></div>
+            <div class="ba" role="img" aria-label="1か月あたりの事務作業時間：改善前8.5時間、改善後2時間">
+              <div class="ba-row"><span class="ba-k">BEFORE</span><span class="ba-track"><i class="ba-fill b" style="width:100%"></i></span><span class="ba-v">8.5<small>時間</small></span></div>
+              <div class="ba-row"><span class="ba-k a">AFTER</span><span class="ba-track"><i class="ba-fill a" style="width:23.5%"></i></span><span class="ba-v a">2<small>時間</small></span></div>
+            </div>
             <p class="case-detail">月8.5時間 → 2時間（年間約77時間）。打ち直しがなくなり、転記ミスや月末の計算ミスもなくなりました。</p>
           </div>
         </article>
@@ -600,7 +626,14 @@ footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
           <span class="case-role">現金出納帳Pro</span>
           <h3>現金出納帳の作成を、iPhoneで楽に。</h3>
           <p class="case-detail" style="font-size:.98rem">企画・開発・公開まで自社で行ったアプリ。日々の入出金の記録と集計の手間を減らします。</p>
-          <span class="rank-badge">2026年7月時点 · 有料ファイナンス部門 最高<b>10位</b></span>
+          <div class="rankcard" role="img" aria-label="App Store 有料ファイナンス部門で最高10位（2026年7月）">
+            <svg class="rankcard-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6.5 21v-6"/><path d="M12 21V10"/><path d="M17.5 21V4.5"/></svg>
+            <div class="rankcard-txt">
+              <span class="rankcard-cat">App Store 有料 · ファイナンス</span>
+              <span class="rankcard-pos"><b>最高</b><strong>10</strong>位</span>
+            </div>
+            <span class="rankcard-date">2026.07</span>
+          </div>
         </div>
         <div class="product-cta">
           <a class="btn primary" href="https://apps.apple.com/jp/app/%E7%8F%BE%E9%87%91%E5%87%BA%E7%B4%8D%E5%B8%B3pro/id6772142992" target="_blank" rel="noopener">App Store で見る →</a>
