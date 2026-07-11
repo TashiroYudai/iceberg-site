@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- 屋号：Fathom Systems（個人事業／株式会社ではない）・連絡先は info@fathom-systems.jp / 070-4385-8814 -->
+<title>お問い合わせ | Fathom Systems</title>
+<meta name="description" content="Fathom Systems へのお問い合わせ。『何が課題か分からない』段階でも構いません。フォーム・メール・電話で、まずはお気軽にご相談ください。通常2営業日以内にご返信します。" />
+<link rel="canonical" href="https://fathom-systems.jp/contact.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#e9f4fb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Fathom Systems" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:title" content="お問い合わせ | Fathom Systems" />
+<meta property="og:description" content="『何が課題か分からない』段階でも構いません。まずはお気軽にご相談ください。" />
+<meta property="og:url" content="https://fathom-systems.jp/contact.html" />
+<meta property="og:image" content="https://fathom-systems.jp/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="お問い合わせ | Fathom Systems" />
+<meta name="twitter:description" content="『何が課題か分からない』段階でも構いません。まずはお気軽にご相談ください。" />
+<meta name="twitter:image" content="https://fathom-systems.jp/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ContactPage","name":"お問い合わせ | Fathom Systems","url":"https://fathom-systems.jp/contact.html","mainEntity":{"@type":"Organization","name":"Fathom Systems","email":"info@fathom-systems.jp","telephone":"+81-70-4385-8814","url":"https://fathom-systems.jp/","contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"info@fathom-systems.jp","telephone":"+81-70-4385-8814","areaServed":"JP","availableLanguage":"Japanese"}}}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================ TOKENS ============================ */
+:root{
+  --sky:#cfe7f3; --ice:#f3fbff; --glacier:#74b9d8; --tide:#1f6f96;
+  --deep1:#0c3a57; --abyss:#04141f; --lumen:#7fe6ff; --lumen-soft:#3aa9cf;
+  --ink:#06283d; --ink-dim:#35637f; --foam:#e9f6fd; --foam-dim:#9fc3d6;
+  --maxw:1180px; --ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{
+  font-family:"IBM Plex Sans JP",system-ui,sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#cfe7f3 0%,#e0f0f7 42%,#eef7fb 100%);
+  background-attachment:fixed;min-height:100vh;line-height:1.75;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--tide);color:#fff}
+:focus-visible{outline:2px solid var(--tide);outline-offset:3px;border-radius:4px}
+
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;
+  background:linear-gradient(90deg,var(--tide),var(--lumen-soft));box-shadow:0 0 12px rgba(31,111,150,.4)}
+
+/* =========================== NAV =========================== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(18px,5vw,52px);transition:background-color .4s var(--ease),backdrop-filter .4s,box-shadow .4s}
+.nav.scrolled{background:rgba(255,255,255,.66);backdrop-filter:blur(14px) saturate(140%);box-shadow:0 1px 0 rgba(6,40,61,.08)}
+.brand{display:flex;align-items:center;gap:11px;font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:.16em;
+  font-size:1.02rem;color:var(--ink)}
+.brand .mark{width:22px;height:22px;flex:none}
+.nav-links{display:flex;align-items:center;gap:clamp(14px,2.4vw,34px)}
+.nav-links a{font-size:.84rem;letter-spacing:.04em;color:var(--ink);opacity:.78;transition:opacity .25s,color .4s}
+.nav-links a:hover{opacity:1}
+.nav-links a[aria-current=page]{opacity:1;color:var(--tide)}
+.nav-cta{font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.08em;
+  border:1px solid currentColor;border-radius:999px;padding:9px 18px;color:var(--tide);transition:.3s var(--ease)}
+.nav-cta:hover{background:var(--tide);color:#fff!important;border-color:var(--tide);box-shadow:0 8px 22px rgba(31,111,150,.3)}
+.nav-links a.lnk{display:none}
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;padding:0 6px;
+  border:0;background:transparent;color:var(--ink);cursor:pointer}
+.nav-toggle span{display:block;height:2px;background:currentColor;border-radius:2px;transition:transform .3s var(--ease),opacity .2s}
+.nav.open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav.open .nav-toggle span:nth-child(2){opacity:0}
+.nav.open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(min-width:860px){.nav-links a.lnk{display:inline}}
+@media(max-width:859px){
+  .nav-toggle{display:flex}
+  .nav-links{position:absolute;top:calc(100% + 8px);right:clamp(18px,5vw,52px);left:auto;min-width:190px;
+    flex-direction:column;align-items:stretch;gap:2px;padding:10px;border-radius:16px;
+    background:rgba(255,255,255,.95);border:1px solid rgba(6,40,61,.10);box-shadow:0 20px 50px rgba(12,58,87,.22);
+    opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .25s var(--ease),transform .25s var(--ease),visibility .25s}
+  .nav.open .nav-links{opacity:1;visibility:visible;transform:none}
+  .nav-links a.lnk{display:block;padding:13px 15px;border-radius:10px;color:var(--ink);opacity:1;font-size:.92rem}
+  .nav-links a.lnk:hover{background:rgba(31,111,150,.08);color:var(--tide)}
+  .nav-links .nav-cta{display:flex;margin-top:6px;text-align:center;justify-content:center;color:var(--tide);border-color:rgba(31,111,150,.5)}
+}
+
+/* =========================== LAYOUT =========================== */
+.wrap{max-width:var(--maxw);margin-inline:auto;width:100%}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--tide);display:inline-flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:30px;height:1px;background:currentColor;opacity:.7}
+h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1.2;letter-spacing:.01em}
+
+main{padding:clamp(104px,15vh,152px) clamp(20px,6vw,40px) clamp(60px,9vw,110px)}
+
+/* hero copy */
+.c-head{max-width:760px}
+.c-head h1{font-size:clamp(2rem,5.4vw,3.4rem);margin-top:16px;color:var(--ink)}
+.c-head h1 .em{background:linear-gradient(transparent 62%,rgba(122,196,232,.5) 62%)}
+.c-head .lead{margin-top:20px;font-size:1.04rem;color:var(--ink-dim);max-width:52ch}
+
+/* two-column grid */
+.c-grid{display:grid;gap:clamp(26px,4vw,52px);margin-top:clamp(38px,6vw,64px);align-items:start}
+@media(min-width:920px){.c-grid{grid-template-columns:.92fr 1.08fr}}
+
+/* left rail: direct contact + flow */
+.c-aside{display:flex;flex-direction:column;gap:30px}
+.c-block h2{font-size:1.12rem;color:var(--ink);font-weight:700;font-family:"Zen Kaku Gothic New",sans-serif}
+.c-block h2 .rune{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.2em;color:var(--tide);
+  display:block;margin-bottom:8px;font-weight:600}
+
+.direct{list-style:none;display:flex;flex-direction:column;gap:2px;margin-top:14px}
+.direct li{display:flex;align-items:baseline;gap:14px;padding:12px 2px;border-bottom:1px solid rgba(6,40,61,.09)}
+.direct li:last-child{border-bottom:0}
+.direct .k{flex:none;width:4.2em;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.08em;
+  color:var(--tide);padding-top:2px}
+.direct .v{font-size:1rem;color:var(--ink);word-break:break-word}
+.direct a.v{transition:color .2s}
+.direct a.v:hover{color:var(--tide)}
+.direct .v small{display:block;font-size:.78rem;color:var(--ink-dim);letter-spacing:0;margin-top:2px}
+
+.flow{list-style:none;counter-reset:step;margin-top:16px;position:relative;padding-left:6px}
+.flow::before{content:"";position:absolute;left:15px;top:12px;bottom:12px;width:1px;
+  background:repeating-linear-gradient(180deg,rgba(31,111,150,.5) 0 4px,transparent 4px 9px)}
+.flow li{counter-increment:step;position:relative;padding:0 0 22px 44px}
+.flow li:last-child{padding-bottom:0}
+.flow li::before{content:counter(step,decimal-leading-zero);position:absolute;left:0;top:-2px;
+  width:31px;height:31px;border-radius:50%;background:#fff;border:1.5px solid var(--tide);
+  color:var(--tide);font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(31,111,150,.08)}
+.flow .ft{font-weight:700;color:var(--ink);font-size:.98rem}
+.flow .fd{font-size:.86rem;color:var(--ink-dim);margin-top:3px}
+
+/* form panel */
+.panel{background:rgba(255,255,255,.72);border:1px solid rgba(6,40,61,.10);
+  box-shadow:0 30px 70px -40px rgba(12,58,87,.55);border-radius:22px;
+  padding:clamp(24px,4vw,40px);backdrop-filter:blur(6px)}
+.panel-head{margin-bottom:22px}
+.panel-head h2{font-size:1.24rem;color:var(--ink);font-weight:700}
+.panel-head p{font-size:.88rem;color:var(--ink-dim);margin-top:6px}
+
+form{display:flex;flex-direction:column;gap:18px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:.82rem;font-weight:600;color:var(--ink);letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.req{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;color:#fff;background:var(--tide);
+  border-radius:4px;padding:2px 6px;font-weight:600}
+.opt{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;color:var(--ink-dim);
+  border:1px solid rgba(6,40,61,.18);border-radius:4px;padding:1px 6px;font-weight:500}
+.field input,.field select,.field textarea{
+  font-family:inherit;font-size:.98rem;color:var(--ink);width:100%;
+  background:rgba(255,255,255,.85);border:1px solid rgba(6,40,61,.16);border-radius:11px;
+  padding:13px 15px;transition:border-color .2s,box-shadow .2s;line-height:1.6}
+.field textarea{resize:vertical;min-height:132px}
+.field select{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231f6f96' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center;padding-right:40px}
+.field input::placeholder,.field textarea::placeholder{color:#9db4c2}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--tide);box-shadow:0 0 0 3px rgba(31,111,150,.14)}
+
+.submit-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:4px}
+.btn{font-family:"IBM Plex Mono",monospace;font-size:.86rem;letter-spacing:.08em;padding:15px 30px;border-radius:999px;
+  transition:.3s var(--ease);display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:0}
+.btn.primary{background:var(--tide);color:#fff;box-shadow:0 10px 30px -12px rgba(31,111,150,.6)}
+.btn.primary:hover{box-shadow:0 16px 40px -12px rgba(31,111,150,.7);transform:translateY(-3px)}
+.form-note{font-size:.78rem;color:var(--ink-dim);line-height:1.7;margin-top:2px}
+.form-note a{color:var(--tide);border-bottom:1px solid rgba(31,111,150,.35)}
+.privacy{font-size:.74rem;color:var(--ink-dim);margin-top:14px}
+
+/* ========================== FOOTER ========================== */
+footer{position:relative;z-index:1;padding:48px clamp(20px,6vw,40px) 56px;color:var(--ink-dim);
+  border-top:1px solid rgba(6,40,61,.10);font-size:.82rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+footer .brand{color:var(--ink)}
+footer .seabed{font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+footer .f-brand{display:flex;flex-direction:column;gap:6px}
+footer .brand-yomi{display:inline-block;font-family:"IBM Plex Sans JP",sans-serif;font-weight:400;font-size:.72rem;letter-spacing:.14em;color:var(--ink-dim);margin-left:12px;white-space:nowrap;vertical-align:baseline}
+footer .f-tag{color:var(--ink-dim);font-size:.86rem}
+footer .f-nav{display:flex;flex-wrap:wrap;gap:10px 24px}
+footer .f-nav a{font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.04em;color:var(--ink-dim)}
+footer .f-nav a:hover{color:var(--tide)}
+footer .f-nav a[aria-current=page]{color:var(--tide)}
+footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,61,.08)}
+
+/* ========================= REVEAL ========================= */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.001s!important}
+  .reveal{opacity:1;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="Fathom Systems ホーム">
+    <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2 L19 9 L12 6.5 L5 9 Z" fill="currentColor"/>
+      <path d="M12 6.5 L19 9 L12 22 L5 9 Z" fill="currentColor" opacity=".55"/>
+      <line x1="2" y1="8.2" x2="22" y2="8.2" stroke="#7fe6ff" stroke-width="1" stroke-dasharray="2 2"/>
+    </svg>
+    <span>Fathom Systems</span>
+  </a>
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="メニュー" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks" aria-label="メイン">
+    <a class="lnk" href="index.html">ホーム</a>
+    <a class="lnk" href="works.html">実績</a>
+    <a class="nav-cta" href="#form">相談する</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <!-- HERO -->
+    <div class="c-head reveal">
+      <span class="eyebrow">Contact · お問い合わせ</span>
+      <h1>まだ<span class="em">曖昧なまま</span>で、<br>ご相談ください。</h1>
+      <p class="lead">「何が問題か、まだはっきりしない」——その段階で構いません。一緒に水面下を見つけ、本当の課題と、それを解くツールを整理します。下のフォーム、またはメール・電話でお気軽にどうぞ。</p>
+    </div>
+
+    <div class="c-grid">
+      <!-- LEFT: direct contact + flow -->
+      <aside class="c-aside">
+        <div class="c-block reveal">
+          <h2><span class="rune">Direct</span>直接のご連絡</h2>
+          <ul class="direct">
+            <li><span class="k">Mail</span><a class="v" href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a></li>
+            <li><span class="k">Tel</span><a class="v" href="tel:070-4385-8814">070-4385-8814<small>平日 10:00–18:00</small></a></li>
+            <li><span class="k">Area</span><span class="v">オンライン・日本全国対応</span></li>
+            <li><span class="k">Reply</span><span class="v">通常2営業日以内にご返信します</span></li>
+          </ul>
+        </div>
+        <div class="c-block reveal d1">
+          <h2><span class="rune">Flow</span>ご相談の流れ</h2>
+          <ol class="flow">
+            <li><div class="ft">お問い合わせ</div><div class="fd">フォーム・メール・電話のいずれかでご連絡ください。</div></li>
+            <li><div class="ft">ヒアリング（無料）</div><div class="fd">オンラインで現状と、時間がかかっている作業をお聞きします。</div></li>
+            <li><div class="ft">ご提案</div><div class="fd">本当の課題と、最適なツール・進め方・概算をご提案します。</div></li>
+          </ol>
+        </div>
+      </aside>
+
+      <!-- RIGHT: inquiry form -->
+      <section class="panel reveal d1" id="form" aria-labelledby="formTitle">
+        <div class="panel-head">
+          <h2 id="formTitle">お問い合わせフォーム</h2>
+          <p>送信すると、入力内容が反映された状態でメールアプリが開きます。</p>
+        </div>
+        <form id="inquiry" novalidate>
+          <div class="field">
+            <label for="name">お名前 <span class="req">必須</span></label>
+            <input id="name" name="name" type="text" autocomplete="name" required placeholder="山田 太郎" />
+          </div>
+          <div class="field">
+            <label for="company">会社名・屋号 <span class="opt">任意</span></label>
+            <input id="company" name="company" type="text" autocomplete="organization" placeholder="株式会社◯◯ / 個人事業主" />
+          </div>
+          <div class="field">
+            <label for="email">メールアドレス <span class="req">必須</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="tel">電話番号 <span class="opt">任意</span></label>
+            <input id="tel" name="tel" type="tel" autocomplete="tel" placeholder="070-0000-0000" />
+          </div>
+          <div class="field">
+            <label for="topic">ご相談の種類 <span class="opt">任意</span></label>
+            <select id="topic" name="topic">
+              <option value="" selected>選択してください</option>
+              <option>スマホアプリ</option>
+              <option>ホームページ</option>
+              <option>社内システム</option>
+              <option>どれか分からない・まず相談したい</option>
+              <option>その他</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">ご相談内容 <span class="req">必須</span></label>
+            <textarea id="message" name="message" required placeholder="例：毎日の入力作業に時間がかかっていて、何を改善すべきか分かっていません。まず相談したいです。"></textarea>
+          </div>
+          <div class="submit-row">
+            <button class="btn primary" type="submit">内容を確認してメールを作成 →</button>
+          </div>
+          <p class="form-note" id="fallback" hidden>メールアプリが開かない場合は、お手数ですが <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> 宛に直接ご連絡ください。</p>
+          <p class="privacy">いただいた個人情報は、ご相談への返信のみに利用し、第三者には提供しません。</p>
+        </form>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand">
+      <span class="brand">Fathom Systems<span class="brand-yomi">ファゾム・システムズ</span></span>
+      <p class="f-tag">水面下の課題を突き止め、システムで価値を届ける。</p>
+    </div>
+    <nav class="f-nav" aria-label="フッターナビ">
+      <a href="index.html#services">サービス</a>
+      <a href="index.html#depth">考え方</a>
+      <a href="index.html#approach">進め方</a>
+      <a href="works.html">実績</a>
+      <a href="contact.html" aria-current="page">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="wrap f-base">
+    <span class="seabed">SEABED</span>
+    <span class="seabed">© 2026 Fathom Systems</span>
+  </div>
+</footer>
+
+<script>
+(() => { "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+  const root = document.documentElement;
+  const progress = document.getElementById('progress');
+  const nav = document.getElementById('nav');
+
+  /* 進捗バー ＋ nav.scrolled（背景ブラー） */
+  const onScroll = () => {
+    const max = root.scrollHeight - innerHeight;
+    const p = clamp(max>0 ? scrollY/max : 0, 0, 1);
+    if (progress) progress.style.width = (p*100).toFixed(2)+'%';
+    if (nav) nav.classList.toggle('scrolled', scrollY > 40);
+  };
+  let ticking = false;
+  addEventListener('scroll', () => { if(!ticking){ ticking=true; requestAnimationFrame(()=>{ onScroll(); ticking=false; }); } }, {passive:true});
+  addEventListener('resize', onScroll, {passive:true});
+  onScroll();
+
+  /* スクロール・リビール */
+  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },
+    {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ハンバーガーメニュー */
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle && nav){
+    const closeMenu = ()=>{ nav.classList.remove('open'); navToggle.setAttribute('aria-expanded','false'); };
+    navToggle.addEventListener('click', (e)=>{ e.stopPropagation();
+      const open = nav.classList.toggle('open'); navToggle.setAttribute('aria-expanded', open?'true':'false'); });
+    nav.querySelectorAll('.nav-links a').forEach(a=> a.addEventListener('click', closeMenu));
+    document.addEventListener('click', (e)=>{ if(nav.classList.contains('open') && !nav.contains(e.target)) closeMenu(); });
+    addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+  }
+
+  /* フォーム → mailto（静的サイトのためメールアプリで送信） */
+  const form = document.getElementById('inquiry');
+  const fallback = document.getElementById('fallback');
+  if (form){
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      if (!form.checkValidity()){ form.reportValidity(); return; }
+      const val = (id)=> (document.getElementById(id).value || '').trim();
+      const topic = val('topic') || '未選択';
+      const subject = `【お問い合わせ】${topic}／${val('name')}`;
+      const body = [
+        'Fathom Systems 御中',
+        '',
+        'お問い合わせ内容は以下のとおりです。',
+        '──────────────',
+        `お名前：${val('name')}`,
+        `会社名・屋号：${val('company') || '（未記入）'}`,
+        `メールアドレス：${val('email')}`,
+        `電話番号：${val('tel') || '（未記入）'}`,
+        `ご相談の種類：${topic}`,
+        '',
+        'ご相談内容：',
+        val('message'),
+        '──────────────'
+      ].join('\r\n');
+      const href = `mailto:info@fathom-systems.jp?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      if (fallback) fallback.hidden = false;
+      window.location.href = href;
+    });
+  }
+})();
+</script>
+</body>
+</html>
