@@ -240,7 +240,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
     <div class="c-head reveal">
       <span class="eyebrow">Contact · お問い合わせ</span>
       <h1>まだ<span class="em">曖昧なまま</span>で、<br>ご相談ください。</h1>
-      <p class="lead">「何が問題か、まだはっきりしない」——その段階で構いません。一緒に水面下を見つけ、本当の課題と、それを解くツールを整理します。下のフォーム、またはメールでお気軽にどうぞ。</p>
+      <p class="lead">お知り合いからのご紹介などで来ていただいた方へ。まずはお名前と連絡先を送っていただければ、こちらから折り返しご連絡します。「何が問題か、まだ曖昧」という段階でも大丈夫です。</p>
     </div>
 
     <div class="c-grid">
@@ -250,14 +250,14 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
           <h2><span class="rune">Direct</span>直接のご連絡</h2>
           <ul class="direct">
             <li><span class="k">Mail</span><a class="v" href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a></li>
-            <li><span class="k">Area</span><span class="v">オンライン・日本全国対応</span></li>
+            <li><span class="k">Area</span><span class="v">熊本県内は対面も可／県外はオンライン対応</span></li>
             <li><span class="k">Reply</span><span class="v">通常2営業日以内にご返信します</span></li>
           </ul>
         </div>
         <div class="c-block reveal d1">
           <h2><span class="rune">Flow</span>ご相談の流れ</h2>
           <ol class="flow">
-            <li><div class="ft">お問い合わせ</div><div class="fd">フォームまたはメールでご連絡ください。</div></li>
+            <li><div class="ft">お問い合わせ</div><div class="fd">フォームにお名前と連絡先を送るだけでOK。折り返しご連絡します。</div></li>
             <li><div class="ft">ヒアリング（無料）</div><div class="fd">オンラインで現状と、時間がかかっている作業をお聞きします。</div></li>
             <li><div class="ft">ご提案</div><div class="fd">本当の課題と、最適なツール・進め方・概算をご提案します。</div></li>
           </ol>
@@ -268,7 +268,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
       <section class="panel reveal d1" id="form" aria-labelledby="formTitle">
         <div class="panel-head">
           <h2 id="formTitle">お問い合わせフォーム</h2>
-          <p>送信すると、入力内容が反映された状態でメールアプリが開きます。</p>
+          <p>お名前と連絡先だけでも大丈夫です。通常2営業日以内に折り返しご連絡します。</p>
         </div>
         <form id="inquiry" novalidate>
           <div class="field">
@@ -288,6 +288,10 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
             <input id="tel" name="tel" type="tel" autocomplete="tel" placeholder="070-0000-0000" />
           </div>
           <div class="field">
+            <label for="referrer">ご紹介者 <span class="opt">任意</span></label>
+            <input id="referrer" name="referrer" type="text" placeholder="ご紹介くださった方のお名前など" />
+          </div>
+          <div class="field">
             <label for="topic">ご相談の種類 <span class="opt">任意</span></label>
             <select id="topic" name="topic">
               <option value="" selected>選択してください</option>
@@ -299,8 +303,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
             </select>
           </div>
           <div class="field">
-            <label for="message">ご相談内容 <span class="req">必須</span></label>
-            <textarea id="message" name="message" required placeholder="例：毎日の入力作業に時間がかかっていて、何を改善すべきか分かっていません。まず相談したいです。"></textarea>
+            <label for="message">ご相談内容 <span class="opt">任意</span></label>
+            <textarea id="message" name="message" placeholder="ご相談したいこと（分かる範囲で。未記入でも大丈夫です）"></textarea>
           </div>
           <!-- ハニーポット（スパムボット対策：人には見えない。入力されたら破棄） -->
           <div class="hp" aria-hidden="true">
@@ -398,7 +402,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
     const body = [
       'Fathom Systems 御中','','お問い合わせ内容は以下のとおりです。','──────────────',
       `お名前：${v.name}`,`会社名・屋号：${v.company || '（未記入）'}`,`メールアドレス：${v.email}`,
-      `電話番号：${v.tel || '（未記入）'}`,`ご相談の種類：${v.topic}`,'','ご相談内容：',v.message,'──────────────'
+      `電話番号：${v.tel || '（未記入）'}`,`ご紹介者：${v.referrer || '（未記入）'}`,`ご相談の種類：${v.topic}`,'','ご相談内容：',v.message || '（未記入）','──────────────'
     ].join('\r\n');
     return `mailto:info@fathom-systems.jp?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
@@ -416,7 +420,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
       if (!form.checkValidity()){ form.reportValidity(); return; }
       const v = {
         name:val('name'), company:val('company'), email:val('email'), tel:val('tel'),
-        topic:val('topic') || '未選択', message:val('message'), company_url:val('company_url')
+        referrer:val('referrer'), topic:val('topic') || '未選択', message:val('message'), company_url:val('company_url')
       };
       const orig = submitBtn ? submitBtn.textContent : '';
       if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = '送信中…'; }

@@ -36,7 +36,7 @@ export async function onRequestPost({ request, env }) {
   const name = clip(body.name).trim();
   const email = clip(body.email).trim();
   const message = clip(body.message).trim();
-  if (!name || !email || !message) return bad(422, '必須項目（お名前・メール・ご相談内容）が未入力です。');
+  if (!name || !email) return bad(422, '必須項目（お名前・メール）が未入力です。');
   if (!isEmail(email)) return bad(422, 'メールアドレスの形式をご確認ください。');
 
   // --- optional Turnstile verification ---
@@ -54,6 +54,7 @@ export async function onRequestPost({ request, env }) {
   // --- compose message ---
   const company = clip(body.company).trim();
   const tel = clip(body.tel).trim();
+  const referrer = clip(body.referrer).trim();
   const topic = clip(body.topic).trim() || '未選択';
   const text = [
     '📩 新しいお問い合わせ',
@@ -62,10 +63,11 @@ export async function onRequestPost({ request, env }) {
     `会社名・屋号：${company || '（未記入）'}`,
     `メール：${email}`,
     `電話：${tel || '（未記入）'}`,
+    `ご紹介者：${referrer || '（未記入）'}`,
     `種類：${topic}`,
     '',
     'ご相談内容：',
-    message,
+    message || '（未記入）',
     '────────────',
   ].join('\n');
 
