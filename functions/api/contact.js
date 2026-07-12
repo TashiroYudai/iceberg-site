@@ -111,3 +111,7 @@ export async function onRequestPost({ request, env }) {
 
 // POST 以外は 405
 export const onRequestGet = () => bad(405, 'Method Not Allowed');
+
+// 本番設定済み(2026-07-12)：RESEND_API_KEY / CONTACT_TO=info@fathom-systems.jp /
+// CONTACT_FROM=noreply@fathom-systems.jp を Cloudflare Pages(Production) に登録。
+// フォーム送信は Resend 経由で info@（iCloud）に届く。
