@@ -211,7 +211,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
   .reveal{opacity:1;transform:none!important}
 }
 /* ===== 日本語の改行を整える（語・熟語が途中で割れないように・スマホ最適化）===== */
-body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctuation:allow-end}
+body{line-break:strict;word-break:keep-all;word-break:auto-phrase;overflow-wrap:anywhere;hanging-punctuation:allow-end}
+.nw{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -242,7 +243,7 @@ body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctu
     <div class="c-head reveal">
       <span class="eyebrow">Contact · お問い合わせ</span>
       <h1><span class="em">お気軽に</span>、<br>ご相談ください。</h1>
-      <p class="lead">まずはお名前とご連絡先を送っていただければ、内容を確認のうえ、こちらから折り返しご連絡します。「何が問題か、まだ曖昧」という段階でも構いません。どんなことでも、お気軽にどうぞ。</p>
+      <p class="lead">まずは<wbr>お名前と<wbr>ご連絡先を<wbr>送って<wbr>いただければ、内容を<wbr>確認のうえ、こちらから<wbr>折り返し<wbr>ご連絡します。<wbr><span class="nw">「何が問題か、まだ曖昧」</span>という<wbr>段階でも<wbr>構いません。どんな<wbr>ことでも、お気軽に<wbr>どうぞ。</p>
     </div>
 
     <div class="c-grid">
@@ -252,16 +253,16 @@ body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctu
           <h2><span class="rune">Direct</span>直接のご連絡</h2>
           <ul class="direct">
             <li><span class="k">Mail</span><a class="v" href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a></li>
-            <li><span class="k">Area</span><span class="v">熊本県内は対面も可／県外はオンライン対応</span></li>
-            <li><span class="k">Reply</span><span class="v">通常2営業日以内にご返信します</span></li>
+            <li><span class="k">Area</span><span class="v">熊本県内は<wbr>対面も可／<wbr>県外は<wbr>オンライン対応</span></li>
+            <li><span class="k">Reply</span><span class="v">通常<wbr>2営業日以内に<wbr>ご返信します</span></li>
           </ul>
         </div>
         <div class="c-block reveal d1">
           <h2><span class="rune">Flow</span>ご相談の流れ</h2>
           <ol class="flow">
-            <li><div class="ft">お問い合わせ</div><div class="fd">フォームにお名前と連絡先を送るだけでOK。折り返しご連絡します。</div></li>
-            <li><div class="ft">ヒアリング（無料）</div><div class="fd">オンラインで現状と、時間がかかっている作業をお聞きします。</div></li>
-            <li><div class="ft">ご提案</div><div class="fd">本当の課題と、最適なツール・進め方・概算をご提案します。</div></li>
+            <li><div class="ft">お問い合わせ</div><div class="fd">フォームに<wbr>お名前と<wbr>連絡先を<wbr>送るだけで<wbr>OK。折り返し<wbr>ご連絡します。</div></li>
+            <li><div class="ft">ヒアリング（無料）</div><div class="fd">オンラインで<wbr>現状と、時間が<wbr>かかっている<wbr>作業を<wbr>お聞きします。</div></li>
+            <li><div class="ft">ご提案</div><div class="fd">本当の課題と、最適な<wbr>ツール・<wbr>進め方・<wbr>概算を<wbr>ご提案します。</div></li>
           </ol>
         </div>
       </aside>
@@ -270,7 +271,7 @@ body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctu
       <section class="panel reveal d1" id="form" aria-labelledby="formTitle">
         <div class="panel-head">
           <h2 id="formTitle">お問い合わせフォーム</h2>
-          <p>お名前と連絡先だけでも大丈夫です。通常2営業日以内に折り返しご連絡します。</p>
+          <p>お名前と<wbr>連絡先だけでも<wbr>大丈夫です。通常<wbr>2営業日以内に<wbr>折り返し<wbr>ご連絡します。</p>
         </div>
         <form id="inquiry" novalidate>
           <div class="field">
@@ -316,15 +317,15 @@ body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctu
           <div class="submit-row">
             <button class="btn primary" type="submit">送信する →</button>
           </div>
-          <p class="form-note" id="fallback" hidden>うまく送信できない場合は、お手数ですが <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> 宛に直接ご連絡ください。</p>
-          <p class="privacy">いただいた個人情報は、ご相談への返信のみに利用し、第三者には提供しません。</p>
+          <p class="form-note" id="fallback" hidden>うまく<wbr>送信できない<wbr>場合は、お手数ですが <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> 宛に<wbr>直接<wbr>ご連絡ください。</p>
+          <p class="privacy">いただいた<wbr>個人情報は、ご相談への<wbr>返信のみに<wbr>利用し、第三者には<wbr>提供しません。</p>
         </form>
         <div class="c-done" id="c-done" hidden>
           <div class="c-done-mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <h2>送信しました。ありがとうございます。</h2>
-          <p>内容を確認のうえ、通常2営業日以内にご返信します。お急ぎの場合は <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> までご連絡ください。</p>
+          <p>内容を<wbr>確認のうえ、通常<wbr>2営業日以内に<wbr>ご返信します。お急ぎの<wbr>場合は <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> までご連絡ください。</p>
         </div>
       </section>
     </div>
@@ -335,7 +336,7 @@ body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctu
   <div class="wrap">
     <div class="f-brand">
       <span class="brand">Fathom Systems<span class="brand-yomi">ファゾム・システムズ</span></span>
-      <p class="f-tag">水面下の課題を突き止め、システムで価値を届ける。</p>
+      <p class="f-tag">水面下の<wbr>課題を<wbr>突き止め、システムで<wbr>価値を<wbr>届ける。</p>
     </div>
     <nav class="f-nav" aria-label="フッターナビ">
       <a href="index.html#services">サービス</a>
