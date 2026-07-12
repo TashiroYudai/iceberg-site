@@ -48,6 +48,7 @@ body{
   overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
 img,svg{display:block;max-width:100%}
+[hidden]{display:none!important}   /* form{display:flex} 等が hidden 属性を上書きしないように */
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--tide);color:#fff}
 :focus-visible{outline:2px solid var(--tide);outline-offset:3px;border-radius:4px}
@@ -171,6 +172,18 @@ form{display:flex;flex-direction:column;gap:18px}
 .form-note{font-size:.78rem;color:var(--ink-dim);line-height:1.7;margin-top:2px}
 .form-note a{color:var(--tide);border-bottom:1px solid rgba(31,111,150,.35)}
 .privacy{font-size:.74rem;color:var(--ink-dim);margin-top:14px}
+.hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form-err{font-size:.82rem;color:#b23b3b;background:rgba(178,59,59,.08);border:1px solid rgba(178,59,59,.25);
+  border-radius:10px;padding:10px 14px;line-height:1.6}
+.btn[disabled]{opacity:.6;cursor:default;transform:none!important;box-shadow:none}
+/* 送信完了パネル */
+.c-done{text-align:center;padding:14px 4px 6px}
+.c-done-mark{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;
+  background:rgba(31,111,150,.10);color:var(--tide);display:flex;align-items:center;justify-content:center}
+.c-done-mark svg{width:30px;height:30px}
+.c-done h2{font-size:1.24rem;color:var(--ink);font-weight:700}
+.c-done p{font-size:.92rem;color:var(--ink-dim);margin-top:12px;max-width:34em;margin-inline:auto}
+.c-done a{color:var(--tide);border-bottom:1px solid rgba(31,111,150,.35)}
 
 /* ========================== FOOTER ========================== */
 footer{position:relative;z-index:1;padding:48px clamp(20px,6vw,40px) 56px;color:var(--ink-dim);
@@ -290,12 +303,24 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
             <label for="message">ご相談内容 <span class="req">必須</span></label>
             <textarea id="message" name="message" required placeholder="例：毎日の入力作業に時間がかかっていて、何を改善すべきか分かっていません。まず相談したいです。"></textarea>
           </div>
-          <div class="submit-row">
-            <button class="btn primary" type="submit">内容を確認してメールを作成 →</button>
+          <!-- ハニーポット（スパムボット対策：人には見えない。入力されたら破棄） -->
+          <div class="hp" aria-hidden="true">
+            <label>会社サイトURL<input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" /></label>
           </div>
-          <p class="form-note" id="fallback" hidden>メールアプリが開かない場合は、お手数ですが <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> 宛に直接ご連絡ください。</p>
+          <p class="form-err" id="formErr" role="alert" hidden></p>
+          <div class="submit-row">
+            <button class="btn primary" type="submit">送信する →</button>
+          </div>
+          <p class="form-note" id="fallback" hidden>うまく送信できない場合は、お手数ですが <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> 宛に直接ご連絡ください。</p>
           <p class="privacy">いただいた個人情報は、ご相談への返信のみに利用し、第三者には提供しません。</p>
         </form>
+        <div class="c-done" id="c-done" hidden>
+          <div class="c-done-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2>送信しました。ありがとうございます。</h2>
+          <p>内容を確認のうえ、通常2営業日以内にご返信します。お急ぎの場合は <a href="mailto:info@fathom-systems.jp">info@fathom-systems.jp</a> までご連絡ください。</p>
+        </div>
       </section>
     </div>
   </div>
@@ -357,34 +382,62 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
     addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
   }
 
-  /* フォーム → mailto（静的サイトのためメールアプリで送信） */
+  /* フォーム送信
+     1) /api/contact（Cloudflare Pages Function）へ POST → 成功なら画面内に「送信完了」
+     2) API が無い/ネットワーク不通（例：Cloudflare移行前の状態）→ mailto にフォールバック
+     3) サーバが検証エラー等を返した場合はその内容を画面に表示 */
   const form = document.getElementById('inquiry');
   const fallback = document.getElementById('fallback');
+  const done = document.getElementById('c-done');
+  const errBox = document.getElementById('formErr');
+  const panelHead = document.querySelector('.panel-head');
+  const submitBtn = form ? form.querySelector('button[type=submit]') : null;
+  const val = (id)=>{ const el=document.getElementById(id); return el ? (el.value||'').trim() : ''; };
+
+  const buildMailto = (v)=>{
+    const subject = `【お問い合わせ】${v.topic}／${v.name}`;
+    const body = [
+      'Fathom Systems 御中','','お問い合わせ内容は以下のとおりです。','──────────────',
+      `お名前：${v.name}`,`会社名・屋号：${v.company || '（未記入）'}`,`メールアドレス：${v.email}`,
+      `電話番号：${v.tel || '（未記入）'}`,`ご相談の種類：${v.topic}`,'','ご相談内容：',v.message,'──────────────'
+    ].join('\r\n');
+    return `mailto:info@fathom-systems.jp?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  const showError = (msg)=>{ if(errBox){ errBox.textContent = msg; errBox.hidden = false; } };
+  const showDone = ()=>{
+    if(form) form.hidden = true;
+    if(panelHead) panelHead.hidden = true;
+    if(done){ done.hidden = false; done.scrollIntoView({behavior:'smooth', block:'center'}); }
+  };
+
   if (form){
-    form.addEventListener('submit', (e)=>{
+    form.addEventListener('submit', async (e)=>{
       e.preventDefault();
+      if (errBox) errBox.hidden = true;
       if (!form.checkValidity()){ form.reportValidity(); return; }
-      const val = (id)=> (document.getElementById(id).value || '').trim();
-      const topic = val('topic') || '未選択';
-      const subject = `【お問い合わせ】${topic}／${val('name')}`;
-      const body = [
-        'Fathom Systems 御中',
-        '',
-        'お問い合わせ内容は以下のとおりです。',
-        '──────────────',
-        `お名前：${val('name')}`,
-        `会社名・屋号：${val('company') || '（未記入）'}`,
-        `メールアドレス：${val('email')}`,
-        `電話番号：${val('tel') || '（未記入）'}`,
-        `ご相談の種類：${topic}`,
-        '',
-        'ご相談内容：',
-        val('message'),
-        '──────────────'
-      ].join('\r\n');
-      const href = `mailto:info@fathom-systems.jp?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      if (fallback) fallback.hidden = false;
-      window.location.href = href;
+      const v = {
+        name:val('name'), company:val('company'), email:val('email'), tel:val('tel'),
+        topic:val('topic') || '未選択', message:val('message'), company_url:val('company_url')
+      };
+      const orig = submitBtn ? submitBtn.textContent : '';
+      if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = '送信中…'; }
+      try {
+        const res = await fetch('/api/contact', {
+          method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(v)
+        });
+        const data = await res.json().catch(()=>null);
+        if (res.ok && data && data.ok){ showDone(); return; }
+        if (data && data.error){            // サーバが応答した実エラー → 表示（mailtoにはしない）
+          showError(data.error);
+          if (submitBtn){ submitBtn.disabled = false; submitBtn.textContent = orig; }
+          return;
+        }
+        throw new Error('api-absent');       // 404/405/HTML など＝APIが未デプロイ → フォールバック
+      } catch (err){
+        if (submitBtn){ submitBtn.disabled = false; submitBtn.textContent = orig; }
+        if (fallback) fallback.hidden = false;
+        window.location.href = buildMailto(v);   // メールアプリで送信（移行前でも機能）
+      }
     });
   }
 })();
