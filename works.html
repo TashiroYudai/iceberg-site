@@ -338,7 +338,7 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 
 /* ========================== CONTACT ========================== */
 .contact{padding-block:clamp(90px,14vw,190px);text-align:center;color:var(--foam)}
-.contact h2{font-size:clamp(2.1rem,6vw,4rem)}
+.contact h2{font-size:clamp(1.6rem,6vw,4rem)}
 .contact h2 b{color:var(--lumen);text-shadow:0 0 40px rgba(127,230,255,.5)}
 .contact p{margin:20px auto 0;color:var(--foam-dim);max-width:46ch;font-size:1.05rem}
 .contact .actions{margin-top:40px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
@@ -462,7 +462,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
 .rankcard-pos{font-family:"Zen Kaku Gothic New",sans-serif;color:var(--ink);font-weight:700;font-size:.9rem;display:flex;align-items:baseline;gap:5px}
 .rankcard-pos b{font-size:.72em;color:var(--tide);font-weight:600}
 .rankcard-pos strong{font-size:1.75em;font-weight:900;background:linear-gradient(180deg,var(--tide),var(--glacier));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
-.rankcard-date{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--ink-dim);opacity:.8}
+.rankcard-date{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--ink-dim);opacity:.8;white-space:nowrap}
 
 /* ===================== ライトテーマ上書き（空撮・白系） ===================== */
 :root{--ink-dim:#35637f}
@@ -516,6 +516,8 @@ footer .f-tag{color:var(--ink-dim)}
 footer .f-nav a{color:var(--ink-dim)}
 footer .f-nav a:hover{color:var(--tide)}
 footer .f-base{border-top:1px solid rgba(6,40,61,.08)}
+/* ===== 日本語の改行を整える（語・熟語が途中で割れないように・スマホ最適化）===== */
+body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctuation:allow-end}
 </style>
 </head>
 <body>

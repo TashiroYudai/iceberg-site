@@ -338,7 +338,7 @@ h1,h2,h3{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-heigh
 
 /* ========================== CONTACT ========================== */
 .contact{padding-block:clamp(90px,14vw,190px);text-align:center;color:var(--foam)}
-.contact h2{font-size:clamp(2.1rem,6vw,4rem)}
+.contact h2{font-size:clamp(1.6rem,6vw,4rem)}
 .contact h2 b{color:var(--lumen);text-shadow:0 0 40px rgba(127,230,255,.5)}
 .contact p{margin:20px auto 0;color:var(--foam-dim);max-width:46ch;font-size:1.05rem}
 .contact .actions{margin-top:40px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
@@ -385,6 +385,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
   .sub{transform:translateX(calc(-100% - 8px))!important}
 }
 :focus-visible{outline:2px solid var(--lumen);outline-offset:3px;border-radius:4px}
+/* ===== 日本語の改行を整える（語・熟語が途中で割れないように・スマホ最適化）===== */
+body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctuation:allow-end}
 </style>
 </head>
 <body>
@@ -482,7 +484,7 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,25
         <h1 style="margin-top:18px"><span class="line l1">その課題は、</span><br><span class="em line l2">氷山の一角。</span></h1>
       </div>
       <div class="hero-body">
-        <p class="lead">「何が問題かも、うまく言えない」「時間がかかる作業があるけど、何を改善するべきか分からない」——まずはそこからで大丈夫です。水面下の課題を調べて本当の課題を突き止め、解決するためのシステムで価値を届けます。</p>
+        <p class="lead">「何が問題かも、うまく言えない」「時間がかかる作業があるけど、何を改善するべきか分からない」——まずはそこからで大丈夫です。水面下の課題を調べて<wbr>本当の課題を突き止め、<wbr>解決するためのシステムで価値を届けます。</p>
         <div class="chips" aria-label="提供サービス">
           <span class="chip">社内システム開発</span>
           <span class="chip">ホームページ制作</span>

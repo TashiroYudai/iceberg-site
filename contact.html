@@ -120,7 +120,7 @@ main{padding:clamp(104px,15vh,152px) clamp(20px,6vw,40px) clamp(60px,9vw,110px)}
 .direct li:last-child{border-bottom:0}
 .direct .k{flex:none;width:4.2em;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.08em;
   color:var(--tide);padding-top:2px}
-.direct .v{font-size:1rem;color:var(--ink);word-break:break-word}
+.direct .v{font-size:1rem;color:var(--ink)}
 .direct a.v{transition:color .2s}
 .direct a.v:hover{color:var(--tide)}
 .direct .v small{display:block;font-size:.78rem;color:var(--ink-dim);letter-spacing:0;margin-top:2px}
@@ -210,6 +210,8 @@ footer .f-base{margin-top:26px;padding-top:18px;border-top:1px solid rgba(6,40,6
   *,*::before,*::after{animation:none!important;transition-duration:.001s!important}
   .reveal{opacity:1;transform:none!important}
 }
+/* ===== 日本語の改行を整える（語・熟語が途中で割れないように・スマホ最適化）===== */
+body{line-break:strict;word-break:keep-all;overflow-wrap:anywhere;hanging-punctuation:allow-end}
 </style>
 </head>
 <body>
